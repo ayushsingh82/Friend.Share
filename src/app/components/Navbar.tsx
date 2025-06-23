@@ -9,7 +9,7 @@ const Navbar = () => {
     <nav className="bg-blue-600 p-4 shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="text-white text-2xl font-bold hover:text-yellow-300 transition-colors">
-          ZoraName Studio
+          Zora.Connect
         </Link>
         
         {/* Mobile menu button */}
@@ -28,11 +28,11 @@ const Navbar = () => {
 
         {/* Desktop menu */}
         <div className="hidden md:flex space-x-6">
-          <Link href="/create" className="text-white hover:text-yellow-300 transition-colors">
-            Create
+          <Link href="/register" className="text-white hover:text-yellow-300 transition-colors">
+            Register
           </Link>
-          <Link href="/explore" className="text-white hover:text-yellow-300 transition-colors">
-            Explore
+          <Link href="/leaderboard" className="text-white hover:text-yellow-300 transition-colors">
+            leaderboard
           </Link>
           <Link href="/dao" className="text-white hover:text-yellow-300 transition-colors">
             DAO
@@ -65,3 +65,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+

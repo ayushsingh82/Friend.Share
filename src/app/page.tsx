@@ -1,5 +1,4 @@
 'use client';
-import Navbar from './components/Navbar';
 
 const NOUNS_IMAGE_BASE = "https://noun.pics/";
 
@@ -9,8 +8,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      <Navbar />
-      
       {/* Hero Section - Dynamic Background */}
       <section className="relative min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 overflow-hidden">
         {/* Noun Images */}
@@ -40,11 +37,11 @@ export default function Home() {
               textShadow: '-4px 4px 0 #ffffff',
               WebkitTextStroke: '2px #ffffff'
             }}>
-              ZoraName
-              <span className="text-yellow-500">Studio</span>
+              Zora.
+              <span className="text-yellow-500">Connect</span>
             </h1>
-            <p className="text-xl md:text-2xl text-black font-bold max-w-2xl mx-auto">
-              Launch your meme, art, or project as a coin + ENS domain + Nounified NFT in one click
+            <p className="text-xl md:text-2xl text-white font-bold max-w-2xl mx-auto">
+            Get instant access to and invest in your favorite creators & experts.
             </p>
           </div>
 
@@ -52,18 +49,18 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
             <div className="bg-blue-600 p-6 rounded-xl border border-white/20 text-white transform hover:scale-105 transition-all">
               <div className="text-4xl mb-4">🎨</div>
-              <h3 className="text-xl font-bold mb-2">Create</h3>
-              <p className="text-white/90">Mint your personal coin with matching ENS name</p>
+              <h3 className="text-xl font-bold mb-2">FIND CREATORS</h3>
+              <p className="text-white/90">Discover creators across a variety of specialties</p>
             </div>
             <div className="bg-blue-600 p-6 rounded-xl border border-white/20 text-white transform hover:scale-105 transition-all">
               <div className="text-4xl mb-4">🚀</div>
-              <h3 className="text-xl font-bold mb-2">Launch</h3>
-              <p className="text-white/90">Bundle your content as a Noun-style NFT</p>
+              <h3 className="text-xl font-bold mb-2">BUY THEIR TIME</h3>
+              <p className="text-white/90">Buy minutes of the creators you want to connect with or invest in</p>
             </div>
             <div className="bg-blue-600 p-6 rounded-xl border border-white/20 text-white transform hover:scale-105 transition-all">
               <div className="text-4xl mb-4">💎</div>
-              <h3 className="text-xl font-bold mb-2">Earn</h3>
-              <p className="text-white/90">Get rewards from Zora Protocol</p>
+              <h3 className="text-xl font-bold mb-2">CONNECT</h3>
+              <p className="text-white/90">Connect with powerful creators through direct messages, API calls, and automated tasks.</p>
             </div>
           </div>
 
@@ -195,10 +192,10 @@ export default function Home() {
 
         <div className="container mx-auto px-4 text-center relative z-20">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            ZoraName Studio
+          Zora.Connect
           </h2>
           <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto">
-            Join thousands of creators who are already building their legacy on ZoraName Studio
+            Join thousands of creators who are already building their legacy on Zora.Connect
           </p>
           <button className="px-12 py-5 bg-white text-[#8B5CF6] rounded-full font-bold text-xl hover:bg-white/90 transition-colors transform hover:scale-105 shadow-lg">
             Start Creating Now
