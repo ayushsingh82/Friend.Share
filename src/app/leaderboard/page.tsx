@@ -6,50 +6,65 @@ const rankings = [
   {
     username: "toly",
     nounId: 1290,
-    price: "50 FLOW",
-    marketCap: "5,000,000 FLOW"
+    price: "50 ZORA",
+    marketCap: "5,000,000 ZORA"
   },
   {
     username: "Ansem",
     nounId: 1291,
-    price: "45 FLOW",
-    marketCap: "4,500,000 FLOW"
+    price: "45 ZORA",
+    marketCap: "4,500,000 ZORA"
   },
   {
     username: "Kawz",
     nounId: 1292,
-    price: "40 FLOW",
-    marketCap: "4,000,000 FLOW"
+    price: "40 ZORA",
+    marketCap: "4,000,000 ZORA"
   },
   {
     username: "mert",
     nounId: 1293,
-    price: "35 FLOW",
-    marketCap: "3,500,000 FLOW"
+    price: "35 ZORA",
+    marketCap: "3,500,000 ZORA"
   },
   {
     username: "raj",
     nounId: 1294,
-    price: "30 FLOW",
-    marketCap: "3,000,000 FLOW"
+    price: "30 ZORA",
+    marketCap: "3,000,000 ZORA"
   }
 ];
 
 export default function Leaderboard() {
   return (
-    <main className="min-h-screen bg-yellow-50 pb-20">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <main className="min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 pb-20 relative overflow-hidden">
+      {/* Noun images as background decorations */}
+      <img
+        src="https://noun.pics/1308.png"
+        alt="Noun Top Left"
+        className="absolute top-12 left-0 w-56 h-56 md:w-72 md:h-72 opacity-100 pointer-events-none rounded-full z-0"
+      />
+      <img
+        src="https://noun.pics/1309.png"
+        alt="Noun Bottom Right"
+        className="absolute bottom-12 right-0 w-48 h-48 md:w-64 md:h-64 opacity-100 pointer-events-none rounded-full z-0"
+      />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
         {/* Leaderboard header */}
         <div className="mb-10 text-center">
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-2 text-blue-700 drop-shadow-sm">
-            Leaderboard
-          </h1>
-          <p className="text-lg font-semibold text-blue-500/80">Top creators by market cap</p>
+        <h1 className="text-6xl md:text-8xl font-black mb-6 text-black" style={{
+              textShadow: '-4px 4px 0 #ffffff',
+              WebkitTextStroke: '2px #ffffff'
+            }}>
+              Leader
+              <span className="text-yellow-500">Board</span>
+            </h1>
+          <p className="text-lg font-semibold text-white">Top creators by market cap</p>
         </div>
 
         {/* Eye-soothing Rankings table */}
-        <div className="rounded-3xl overflow-hidden shadow-xl border-2 border-yellow-200 bg-white/90 backdrop-blur-xl">
-          <div className="overflow-x-auto">
+        <div className="rounded-3xl overZORA-hidden shadow-xl border-2 border-yellow-200 bg-white/90 backdrop-blur-xl">
+          <div className="overZORA-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="bg-yellow-100">
@@ -68,7 +83,7 @@ export default function Leaderboard() {
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <span className="text-xl font-bold text-red-400">#{index + 1}</span>
+                        <span className="text-xl font-bold text-purple-700">#{index + 1}</span>
                         <img
                           src={`${NOUNS_IMAGE_BASE}${rank.nounId}.png`}
                           alt={`NOUN ${rank.nounId}`}
@@ -80,7 +95,7 @@ export default function Leaderboard() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="font-bold text-red-500 text-lg">{rank.price}</span>
+                      <span className="font-bold text-purple-700 text-lg">{rank.price}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className="font-bold text-blue-600 text-lg">{rank.marketCap}</span>

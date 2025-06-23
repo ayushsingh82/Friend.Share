@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-2xl font-bold mb-4">Zora.Connect</h3>
-            <p className="text-white/90">Launch your meme, art, or project as a coin + ENS domain + Nounified NFT in one click</p>
+            <p className="text-white/90">Get instant access to and invest in your favorite creators & experts.</p>
           </div>
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>

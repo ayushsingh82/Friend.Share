@@ -9,19 +9,19 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       {/* Hero Section - Dynamic Background */}
-      <section className="relative min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 overflow-hidden">
+      <section className="relative min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 overZORA-hidden">
         {/* Noun Images */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 overZORA-hidden pointer-events-none">
           {/* Left Noun */}
-          <div className="absolute left-0 top-20 w-72 h-72 opacity-80 z-10">
+          <div className="absolute left-0 top-20 w-72 h-72 opacity-100 z-10">
             <img
               src={`${NOUNS_IMAGE_BASE}1300.png`}
               alt="NOUN 1300"
-              className="w-full h-full object-contain drop-shadow-2xl rounded-full"
+              className="w-full h-full object-contain drop-shadow-2xl rounded-full "
             />
           </div>
           {/* Right Noun */}
-          <div className="absolute right-0 top-40 w-64 h-64 opacity-80 z-10">
+          <div className="absolute right-0 top-40 w-64 h-64 opacity-100 z-10">
             <img
               src={`${NOUNS_IMAGE_BASE}1301.png`}
               alt="NOUN 1301"
@@ -77,11 +77,11 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 bg-blue-600 relative overflow-hidden">
+      <section className="py-20 bg-blue-600 relative overZORA-hidden">
         {/* Noun Images */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 overZORA-hidden pointer-events-none">
           {/* Left Noun */}
-          <div className="absolute left-0 top-1/4 w-64 h-64 opacity-80 z-10">
+          <div className="absolute left-0 top-1/4 w-64 h-64 opacity-100 z-10">
             <img
               src={`${NOUNS_IMAGE_BASE}1302.png`}
               alt="NOUN 1302"
@@ -89,7 +89,7 @@ export default function Home() {
             />
           </div>
           {/* Right Noun */}
-          <div className="absolute right-0 top-1/3 w-56 h-56 opacity-80 z-10">
+          <div className="absolute right-0 top-1/3 w-56 h-56 opacity-100 z-10">
             <img
               src={`${NOUNS_IMAGE_BASE}1303.png`}
               alt="NOUN 1303"
@@ -128,11 +128,11 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-b from-[#FF8C00] via-[#FF7F50] to-[#CC5500] relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-b from-[#FF8C00] via-[#FF7F50] to-[#CC5500] relative overZORA-hidden">
         {/* Noun Images */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 overZORA-hidden pointer-events-none">
           {/* Left Noun */}
-          <div className="absolute left-0 top-1/3 w-60 h-60 opacity-80 z-10">
+          <div className="absolute left-0 top-1/3 w-60 h-60 opacity-100 z-10">
             <img
               src={`${NOUNS_IMAGE_BASE}1304.png`}
               alt="NOUN 1304"
@@ -140,7 +140,7 @@ export default function Home() {
             />
           </div>
           {/* Right Noun */}
-          <div className="absolute right-0 top-1/4 w-52 h-52 opacity-80 z-10">
+          <div className="absolute right-0 top-1/4 w-52 h-52 opacity-100 z-10">
             <img
               src={`${NOUNS_IMAGE_BASE}1305.png`}
               alt="NOUN 1305"
@@ -169,11 +169,11 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] relative overZORA-hidden">
         {/* Noun Images */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 overZORA-hidden pointer-events-none">
           {/* Left Noun */}
-          <div className="absolute left-0 top-1/4 w-56 h-56 opacity-80 z-10">
+          <div className="absolute left-0 top-1/4 w-56 h-56 opacity-100 z-10">
             <img
               src={`${NOUNS_IMAGE_BASE}1306.png`}
               alt="NOUN 1306"
@@ -181,7 +181,7 @@ export default function Home() {
             />
           </div>
           {/* Right Noun */}
-          <div className="absolute right-0 top-1/3 w-48 h-48 opacity-80 z-10">
+          <div className="absolute right-0 top-1/3 w-48 h-48 opacity-100 z-10">
             <img
               src={`${NOUNS_IMAGE_BASE}1307.png`}
               alt="NOUN 1307"

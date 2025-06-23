@@ -75,10 +75,25 @@ export default function RegisterYourself() {
   };
 
   return (
-    <main className="min-h-screen bg-yellow-50 py-12">
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-extrabold mb-8 text-center text-blue-700">
-          Register as a Creator
+    <main className="min-h-screen bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] py-12 relative overflow-hidden">
+      {/* Noun images as background decorations */}
+      <img
+        src="https://noun.pics/1308.png"
+        alt="Noun Top Left"
+        className="absolute top-12 left-0 w-56 h-56 md:w-72 md:h-72 opacity-100 pointer-events-none rounded-full z-0"
+      />
+      <img
+        src="https://noun.pics/1309.png"
+        alt="Noun Bottom Right"
+        className="absolute bottom-12 right-0 w-48 h-48 md:w-64 md:h-64 opacity-100 pointer-events-none rounded-full z-0"
+      />
+      <div className="max-w-3xl mx-auto px-4 py-8 relative z-10">
+        <h1 className="text-3xl md:text-6xl font-black mb-6 text-black" style={{
+                textShadow: '-4px 4px 0 #ffffff',
+                WebkitTextStroke: '2px #ffffff'
+              }}>
+          Register
+          <span className="text-blue-700">Creator</span>
         </h1>
         <div className="rounded-3xl p-8 bg-white/90 border-2 border-yellow-200 shadow-xl backdrop-blur-xl">
           <form className="space-y-8" onSubmit={handleSubmit}>
@@ -91,7 +106,7 @@ export default function RegisterYourself() {
                 <button
                   type="button"
                   onClick={() => setShowNounSelector(!showNounSelector)}
-                  className="w-32 h-32 rounded-full overflow-hidden border-2 border-yellow-200 hover:border-blue-400 transition-colors bg-yellow-100 flex items-center justify-center"
+                  className="w-32 h-32 rounded-full overZORA-hidden border-2 border-yellow-200 hover:border-blue-400 transition-colors bg-yellow-100 flex items-center justify-center"
                 >
                   {selectedNounId ? (
                     <img
@@ -104,7 +119,7 @@ export default function RegisterYourself() {
                   )}
                 </button>
                 {showNounSelector && (
-                  <div className="absolute z-50 mt-2 p-4 bg-white border-2 border-yellow-200 rounded-2xl shadow-xl max-h-[400px] overflow-y-auto">
+                  <div className="absolute z-50 mt-2 p-4 bg-white border-2 border-yellow-200 rounded-2xl shadow-xl max-h-[400px] overZORA-y-auto">
                     <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3">
                       {nounIds.map((nounId) => (
                         <button
@@ -114,7 +129,7 @@ export default function RegisterYourself() {
                             setSelectedNounId(nounId);
                             setShowNounSelector(false);
                           }}
-                          className="w-16 h-16 rounded-full overflow-hidden border-2 border-transparent hover:border-blue-400 transition-colors"
+                          className="w-16 h-16 rounded-full overZORA-hidden border-2 border-transparent hover:border-blue-400 transition-colors"
                         >
                           <img
                             src={`${NOUNS_IMAGE_BASE}${nounId}.png`}

@@ -4,17 +4,13 @@ import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
+  baseSepolia
 } from 'wagmi/chains';
 
 const config = getDefaultConfig({
   appName: 'My RainbowKit App',
   projectId: 'YOUR_PROJECT_ID', // <-- Replace with your actual project ID
-  chains: [mainnet, polygon, optimism, arbitrum, base],
+  chains: [baseSepolia],
   ssr: true,
 });
 

@@ -36,8 +36,8 @@ const Navbar = () => {
           <Link href="/leaderboard" className="text-white hover:text-yellow-300 transition-colors">
             leaderboard
           </Link>
-          <Link href="/dao" className="text-white hover:text-yellow-300 transition-colors">
-            DAO
+          <Link href="/explore" className="text-white hover:text-yellow-300 transition-colors">
+            Explore
           </Link>
          
             <ConnectButton/>
@@ -53,10 +53,13 @@ const Navbar = () => {
             <Link href="/explore" className="block text-white hover:text-yellow-300 transition-colors">
               Explore
             </Link>
-            <Link href="/dao" className="block text-white hover:text-yellow-300 transition-colors">
-              DAO
+            <Link href="/explore" className="block text-white hover:text-yellow-300 transition-colors">
+              Explore
             </Link>
-            <ConnectButton/>
+            <div className="border-t border-blue-400 my-2"></div>
+            <div className="pt-2 flex items-center">
+              <ConnectButton />
+            </div>
           </div>
         )}
       </div>

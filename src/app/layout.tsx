@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "ZoraName Studio",
-  description: "Launch your meme, art, or project as a coin + ENS domain + Nounified NFT in one click",
+  description: "Get instant access to and invest in your favorite creators & experts.",
 };
 
 export default function RootLayout({
