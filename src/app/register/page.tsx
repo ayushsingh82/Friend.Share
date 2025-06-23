@@ -75,12 +75,12 @@ export default function RegisterYourself() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-red-500 via-yellow-200 to-blue-400 py-12">
+    <main className="min-h-screen bg-yellow-50 py-12">
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-extrabold mb-8 text-center bg-gradient-to-r from-yellow-400 via-red-500 to-blue-500 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-extrabold mb-8 text-center text-blue-700">
           Register as a Creator
         </h1>
-        <div className="rounded-3xl p-8 bg-white/80 border-4 border-yellow-300 shadow-2xl backdrop-blur-xl">
+        <div className="rounded-3xl p-8 bg-white/90 border-2 border-yellow-200 shadow-xl backdrop-blur-xl">
           <form className="space-y-8" onSubmit={handleSubmit}>
             {/* Profile Image Selector */}
             <div className="space-y-2">
@@ -91,7 +91,7 @@ export default function RegisterYourself() {
                 <button
                   type="button"
                   onClick={() => setShowNounSelector(!showNounSelector)}
-                  className="w-32 h-32 rounded-full overflow-hidden border-4 border-yellow-400 hover:border-red-500 transition-colors bg-yellow-100 flex items-center justify-center"
+                  className="w-32 h-32 rounded-full overflow-hidden border-2 border-yellow-200 hover:border-blue-400 transition-colors bg-yellow-100 flex items-center justify-center"
                 >
                   {selectedNounId ? (
                     <img
@@ -104,7 +104,7 @@ export default function RegisterYourself() {
                   )}
                 </button>
                 {showNounSelector && (
-                  <div className="absolute z-50 mt-2 p-4 bg-white/95 border-2 border-yellow-400 rounded-2xl shadow-2xl max-h-[400px] overflow-y-auto">
+                  <div className="absolute z-50 mt-2 p-4 bg-white border-2 border-yellow-200 rounded-2xl shadow-xl max-h-[400px] overflow-y-auto">
                     <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3">
                       {nounIds.map((nounId) => (
                         <button
@@ -114,7 +114,7 @@ export default function RegisterYourself() {
                             setSelectedNounId(nounId);
                             setShowNounSelector(false);
                           }}
-                          className="w-16 h-16 rounded-full overflow-hidden border-2 border-transparent hover:border-blue-500 transition-colors"
+                          className="w-16 h-16 rounded-full overflow-hidden border-2 border-transparent hover:border-blue-400 transition-colors"
                         >
                           <img
                             src={`${NOUNS_IMAGE_BASE}${nounId}.png`}
@@ -139,7 +139,7 @@ export default function RegisterYourself() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full bg-yellow-100 border-2 border-yellow-400 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-200"
+                className="w-full bg-yellow-100 border-2 border-yellow-200 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
                 placeholder="Enter your name"
               />
             </div>
@@ -154,7 +154,7 @@ export default function RegisterYourself() {
                 name="twitter"
                 value={formData.twitter}
                 onChange={handleChange}
-                className="w-full bg-yellow-100 border-2 border-yellow-400 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-200"
+                className="w-full bg-yellow-100 border-2 border-yellow-200 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
                 placeholder="Enter your Twitter username"
               />
             </div>
@@ -168,7 +168,7 @@ export default function RegisterYourself() {
                 name="bio"
                 value={formData.bio}
                 onChange={handleChange}
-                className="w-full bg-yellow-100 border-2 border-yellow-400 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-200 h-28"
+                className="w-full bg-yellow-100 border-2 border-yellow-200 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200 h-28"
                 placeholder="Tell us about yourself"
               />
             </div>
@@ -182,13 +182,13 @@ export default function RegisterYourself() {
                 {formData.tags.map((tag, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-1 bg-blue-200 px-3 py-1 rounded-full border border-yellow-400"
+                    className="flex items-center gap-1 bg-blue-100 px-3 py-1 rounded-full border border-yellow-200"
                   >
                     <span className="text-blue-700 font-bold">{tag}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveTag(tag)}
-                      className="text-red-500 hover:text-red-700 font-bold"
+                      className="text-red-400 hover:text-red-600 font-bold"
                     >
                       ×
                     </button>
@@ -200,7 +200,7 @@ export default function RegisterYourself() {
                   type="text"
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
-                  className="flex-1 bg-yellow-100 border-2 border-yellow-400 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-200"
+                  className="flex-1 bg-yellow-100 border-2 border-yellow-200 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
                   placeholder="Add a new tag"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
@@ -212,7 +212,7 @@ export default function RegisterYourself() {
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold"
+                  className="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 transition-colors font-bold"
                 >
                   +
                 </button>
@@ -226,12 +226,12 @@ export default function RegisterYourself() {
               </label>
               <div className="flex flex-wrap gap-4">
                 {specialtyOptions.map((option) => (
-                  <label key={option.id} className="flex items-center gap-2 cursor-pointer bg-yellow-200 border-2 border-yellow-400 rounded-full px-4 py-2 font-bold text-blue-700 hover:bg-yellow-300 transition-colors">
+                  <label key={option.id} className="flex items-center gap-2 cursor-pointer bg-yellow-100 border-2 border-yellow-200 rounded-full px-4 py-2 font-bold text-blue-700 hover:bg-yellow-200 transition-colors">
                     <input
                       type="checkbox"
                       checked={formData.specialties.includes(option.id)}
                       onChange={() => handleSpecialtyChange(option.id)}
-                      className="accent-red-500 w-4 h-4"
+                      className="accent-red-400 w-4 h-4"
                     />
                     {option.label}
                   </label>
@@ -242,7 +242,7 @@ export default function RegisterYourself() {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full px-6 py-3 bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 text-white rounded-full font-extrabold text-lg hover:from-yellow-400 hover:to-red-500 transition-all shadow-lg shadow-yellow-400/30"
+              className="w-full px-6 py-3 bg-blue-400 text-white rounded-full font-extrabold text-lg hover:bg-blue-500 transition-all shadow-lg shadow-yellow-400/20"
             >
               Register as Creator
             </button>

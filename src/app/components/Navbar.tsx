@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,9 +39,9 @@ const Navbar = () => {
           <Link href="/dao" className="text-white hover:text-yellow-300 transition-colors">
             DAO
           </Link>
-          <Link href="/connect" className="text-white hover:text-yellow-300 transition-colors">
-            Connect Wallet
-          </Link>
+         
+            <ConnectButton/>
+        
         </div>
 
         {/* Mobile menu */}
@@ -54,9 +56,7 @@ const Navbar = () => {
             <Link href="/dao" className="block text-white hover:text-yellow-300 transition-colors">
               DAO
             </Link>
-            <Link href="/connect" className="block text-white hover:text-yellow-300 transition-colors">
-              Connect Wallet
-            </Link>
+            <ConnectButton/>
           </div>
         )}
       </div>
