@@ -60,8 +60,12 @@ const topCreators = [
 
 // Placeholder avatar generator
 const generateAvatar = (index: number) => (
-  <div className="w-12 h-12 rounded-full bg-pink-500 flex items-center justify-center text-white font-bold text-xl">
-    {topCreators[index].name.charAt(0)}
+  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-yellow-400">
+    <img 
+      src={`https://noun.pics/${1300 + index}`}
+      alt={`${topCreators[index].name}'s Noun`}
+      className="w-full h-full object-cover"
+    />
   </div>
 );
 
@@ -89,14 +93,14 @@ const page = () => {
           {topCreators.map((creator, index) => (
             <div 
               key={index}
-              className="group bg-white/70 backdrop-blur-xl border-4 border-yellow-200 rounded-2xl p-6 flex flex-col gap-4 \
-              hover:shadow-xl hover:shadow-blue-300/20 transition-all duration-300 hover:border-blue-400 \
-              hover:translate-y-[-4px] hover:bg-yellow-100 relative"
+              className="group bg-pink-200 backdrop-blur-xl border-4 border-blue-400 rounded-2xl p-6 flex flex-col gap-4 \
+              hover:shadow-xl hover:shadow-blue-300/20 transition-all duration-300 hover:border-bllue-600 \
+              hover:translate-y-[-4px] hover:bg-yellow-200 relative"
             >
               {/* Move price to left side */}
               <div className="flex items-end justify-between mt-auto pt-4 border-t border-blue-200">
                 <div>
-                  <span className="text-blue-500 text-2xl font-bold">{creator.rate} ZORA</span>
+                  <span className="text-blue-500 text-2xl font-bold">{creator.rate} ETH</span>
                   <span className="text-blue-900/60 text-sm ml-1">/ min</span>
                 </div>
                 {/* Buy Time button - positioned in bottom right */}
@@ -127,12 +131,12 @@ const page = () => {
                   <span className="text-red-300">✓</span>
                 </div>
               </div>
-              <p className="text-blue-900/80 text-sm">
+              <p className="text-black text-sm">
                 {creator.bio}
               </p>
               <div className="flex flex-wrap items-center gap-2 mt-2">
                 {creator.tags.map((tag, tagIndex) => (
-                  <span key={tagIndex} className="px-3 py-1 bg-blue-100 text-blue-500 rounded-full text-xs">{tag}</span>
+                  <span key={tagIndex} className="px-3 py-1 bg-blue-300 text-black rounded-full text-xs font-semibold">{tag}</span>
                 ))}
               </div>
             </div>

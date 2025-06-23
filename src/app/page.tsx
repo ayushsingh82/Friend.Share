@@ -9,9 +9,9 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       {/* Hero Section - Dynamic Background */}
-      <section className="relative min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 overZORA-hidden">
+      <section className="relative min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 overETH-hidden">
         {/* Noun Images */}
-        <div className="absolute inset-0 overZORA-hidden pointer-events-none">
+        <div className="absolute inset-0 overETH-hidden pointer-events-none">
           {/* Left Noun */}
           <div className="absolute left-0 top-20 w-72 h-72 opacity-100 z-10">
             <img
@@ -37,7 +37,7 @@ export default function Home() {
               textShadow: '-4px 4px 0 #ffffff',
               WebkitTextStroke: '2px #ffffff'
             }}>
-              Zora.
+              ZORA.
               <span className="text-yellow-500">Connect</span>
             </h1>
             <p className="text-xl md:text-2xl text-white font-bold max-w-2xl mx-auto">
@@ -77,9 +77,9 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 bg-blue-600 relative overZORA-hidden">
+      <section className="py-20 bg-blue-600 relative overETH-hidden">
         {/* Noun Images */}
-        <div className="absolute inset-0 overZORA-hidden pointer-events-none">
+        <div className="absolute inset-0 overETH-hidden pointer-events-none">
           {/* Left Noun */}
           <div className="absolute left-0 top-1/4 w-64 h-64 opacity-100 z-10">
             <img
@@ -116,7 +116,7 @@ export default function Home() {
             <div className="bg-white/20 backdrop-blur-sm p-8 rounded-xl border border-white/30 text-white text-center transform hover:scale-105 transition-all">
               <div className="text-4xl mb-4">🚀</div>
               <h3 className="text-xl font-bold mb-4">Mint</h3>
-              <p className="text-white/90">Launch on Zora</p>
+              <p className="text-white/90">Launch on ETH</p>
             </div>
             <div className="bg-white/20 backdrop-blur-sm p-8 rounded-xl border border-white/30 text-white text-center transform hover:scale-105 transition-all">
               <div className="text-4xl mb-4">🌱</div>
@@ -128,9 +128,9 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-b from-[#FF8C00] via-[#FF7F50] to-[#CC5500] relative overZORA-hidden">
+      <section className="py-20 bg-gradient-to-b from-[#FF8C00] via-[#FF7F50] to-[#CC5500] relative overETH-hidden">
         {/* Noun Images */}
-        <div className="absolute inset-0 overZORA-hidden pointer-events-none">
+        <div className="absolute inset-0 overETH-hidden pointer-events-none">
           {/* Left Noun */}
           <div className="absolute left-0 top-1/3 w-60 h-60 opacity-100 z-10">
             <img
@@ -169,9 +169,9 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] relative overZORA-hidden">
+      <section className="py-20 bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] relative overETH-hidden">
         {/* Noun Images */}
-        <div className="absolute inset-0 overZORA-hidden pointer-events-none">
+        <div className="absolute inset-0 overETH-hidden pointer-events-none">
           {/* Left Noun */}
           <div className="absolute left-0 top-1/4 w-56 h-56 opacity-100 z-10">
             <img
@@ -192,10 +192,10 @@ export default function Home() {
 
         <div className="container mx-auto px-4 text-center relative z-20">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-          Zora.Connect
+          ZORA.Connect
           </h2>
           <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto">
-            Join thousands of creators who are already building their legacy on Zora.Connect
+            Join thousands of creators who are already building their legacy on ZORA.Connect
           </p>
           <button className="px-12 py-5 bg-white text-[#8B5CF6] rounded-full font-bold text-xl hover:bg-white/90 transition-colors transform hover:scale-105 shadow-lg">
             Start Creating Now

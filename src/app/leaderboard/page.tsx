@@ -6,38 +6,38 @@ const rankings = [
   {
     username: "toly",
     nounId: 1290,
-    price: "50 ZORA",
-    marketCap: "5,000,000 ZORA"
+    price: "50 ETH",
+    marketCap: "5,000,000 ETH"
   },
   {
     username: "Ansem",
     nounId: 1291,
-    price: "45 ZORA",
-    marketCap: "4,500,000 ZORA"
+    price: "45 ETH",
+    marketCap: "4,500,000 ETH"
   },
   {
     username: "Kawz",
     nounId: 1292,
-    price: "40 ZORA",
-    marketCap: "4,000,000 ZORA"
+    price: "40 ETH",
+    marketCap: "4,000,000 ETH"
   },
   {
     username: "mert",
     nounId: 1293,
-    price: "35 ZORA",
-    marketCap: "3,500,000 ZORA"
+    price: "35 ETH",
+    marketCap: "3,500,000 ETH"
   },
   {
     username: "raj",
     nounId: 1294,
-    price: "30 ZORA",
-    marketCap: "3,000,000 ZORA"
+    price: "30 ETH",
+    marketCap: "3,000,000 ETH"
   }
 ];
 
 export default function Leaderboard() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 pb-20 relative overZORA-hidden">
+    <main className="min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 pb-20 relative overETH-hidden">
       {/* Noun images as background decorations */}
       <img
         src="https://noun.pics/1308.png"
@@ -63,8 +63,8 @@ export default function Leaderboard() {
         </div>
 
         {/* Eye-soothing Rankings table */}
-        <div className="rounded-3xl overZORA-hidden shadow-xl border-2 border-yellow-200 bg-white/90 backdrop-blur-xl">
-          <div className="overZORA-x-auto">
+        <div className="rounded-3xl overETH-hidden shadow-xl border-2 border-yellow-200 bg-white/90 backdrop-blur-xl">
+          <div className="overETH-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="bg-yellow-100">

@@ -1,8 +1,10 @@
 'use client';
 import { useState } from 'react';
 
+
 const NOUNS_IMAGE_BASE = "https://noun.pics/";
-const NOUNS_RANGE = { start: 1290, end: 1350 };
+const NOUNS_RANGE = { start: 1290, end: 1312 };
+
 
 const specialtyOptions = [
   { id: 'designer', label: 'Designer' },
@@ -17,13 +19,12 @@ export default function RegisterYourself() {
   const [showNounSelector, setShowNounSelector] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
+    symbol: '',
+    bio: '',
     tagline: '',
     twitter: '',
     specialties: [] as string[],
-    bio: '',
-    tags: [] as string[]
   });
-  const [newTag, setNewTag] = useState('');
 
   const nounIds = Array.from(
     { length: NOUNS_RANGE.end - NOUNS_RANGE.start + 1 },
@@ -35,23 +36,6 @@ export default function RegisterYourself() {
     setFormData({
       ...formData,
       [name]: value
-    });
-  };
-
-  const handleAddTag = () => {
-    if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
-      setFormData({
-        ...formData,
-        tags: [...formData.tags, newTag.trim()]
-      });
-      setNewTag('');
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setFormData({
-      ...formData,
-      tags: formData.tags.filter(tag => tag !== tagToRemove)
     });
   };
 
@@ -75,7 +59,7 @@ export default function RegisterYourself() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] py-12 relative overZORA-hidden">
+    <main className="min-h-screen bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] py-12 relative overETH-hidden">
       {/* Noun images as background decorations */}
       <img
         src="https://noun.pics/1308.png"
@@ -88,7 +72,7 @@ export default function RegisterYourself() {
         className="absolute bottom-12 right-0 w-48 h-48 md:w-64 md:h-64 opacity-100 pointer-events-none rounded-full z-0"
       />
       <div className="max-w-3xl mx-auto px-4 py-8 relative z-10">
-        <h1 className="text-3xl md:text-6xl font-black mb-6 text-black" style={{
+        <h1 className="text-3xl md:text-6xl font-black mb-6 text-red-600" style={{
                 textShadow: '-4px 4px 0 #ffffff',
                 WebkitTextStroke: '2px #ffffff'
               }}>
@@ -106,7 +90,7 @@ export default function RegisterYourself() {
                 <button
                   type="button"
                   onClick={() => setShowNounSelector(!showNounSelector)}
-                  className="w-32 h-32 rounded-full overZORA-hidden border-2 border-yellow-200 hover:border-blue-400 transition-colors bg-yellow-100 flex items-center justify-center"
+                  className="w-32 h-32 rounded-full overETH-hidden border-2 border-yellow-200 hover:border-blue-400 transition-colors bg-yellow-100 flex items-center justify-center"
                 >
                   {selectedNounId ? (
                     <img
@@ -119,7 +103,7 @@ export default function RegisterYourself() {
                   )}
                 </button>
                 {showNounSelector && (
-                  <div className="absolute z-50 mt-2 p-4 bg-white border-2 border-yellow-200 rounded-2xl shadow-xl max-h-[400px] overZORA-y-auto">
+                  <div className="absolute z-50 mt-2 p-4 bg-white border-2 border-yellow-200 rounded-2xl shadow-xl max-h-[400px] overETH-y-auto">
                     <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3">
                       {nounIds.map((nounId) => (
                         <button
@@ -129,7 +113,7 @@ export default function RegisterYourself() {
                             setSelectedNounId(nounId);
                             setShowNounSelector(false);
                           }}
-                          className="w-16 h-16 rounded-full overZORA-hidden border-2 border-transparent hover:border-blue-400 transition-colors"
+                          className="w-16 h-16 rounded-full overETH-hidden border-2 border-transparent hover:border-blue-400 transition-colors"
                         >
                           <img
                             src={`${NOUNS_IMAGE_BASE}${nounId}.png`}
@@ -159,18 +143,19 @@ export default function RegisterYourself() {
               />
             </div>
 
-            {/* Twitter Username Input */}
+            {/* Symbol Input */}
             <div className="space-y-2">
               <label className="block text-lg font-bold text-blue-700">
-                Twitter Username
+                Symbol
               </label>
               <input
                 type="text"
-                name="twitter"
-                value={formData.twitter}
+                name="symbol"
+                value={formData.symbol}
                 onChange={handleChange}
                 className="w-full bg-yellow-100 border-2 border-yellow-200 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
-                placeholder="Enter your Twitter username"
+                placeholder="e.g. ETH"
+                maxLength={8}
               />
             </div>
 
@@ -188,50 +173,19 @@ export default function RegisterYourself() {
               />
             </div>
 
-            {/* Tags Input */}
+            {/* Twitter Username Input */}
             <div className="space-y-2">
               <label className="block text-lg font-bold text-blue-700">
-                Tags
+                Twitter Username
               </label>
-              <div className="flex flex-wrap gap-2 mb-2">
-                {formData.tags.map((tag, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-1 bg-blue-100 px-3 py-1 rounded-full border border-yellow-200"
-                  >
-                    <span className="text-blue-700 font-bold">{tag}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveTag(tag)}
-                      className="text-red-400 hover:text-red-600 font-bold"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
-                  className="flex-1 bg-yellow-100 border-2 border-yellow-200 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
-                  placeholder="Add a new tag"
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleAddTag();
-                    }
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={handleAddTag}
-                  className="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 transition-colors font-bold"
-                >
-                  +
-                </button>
-              </div>
+              <input
+                type="text"
+                name="twitter"
+                value={formData.twitter}
+                onChange={handleChange}
+                className="w-full bg-yellow-100 border-2 border-yellow-200 rounded-lg py-2 px-4 text-blue-900 font-bold focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
+                placeholder="Enter your Twitter username"
+              />
             </div>
 
             {/* Specialties Checkboxes */}

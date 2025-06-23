@@ -8,7 +8,7 @@ import Providers from './provider'
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ZoraName Studio",
+  title: "Zora Connect",
   description: "Get instant access to and invest in your favorite creators & experts.",
 };
 
