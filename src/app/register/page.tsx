@@ -75,7 +75,7 @@ export default function RegisterYourself() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] py-12 relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] py-12 relative overZORA-hidden">
       {/* Noun images as background decorations */}
       <img
         src="https://noun.pics/1308.png"

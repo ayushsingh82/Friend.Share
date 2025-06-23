@@ -37,7 +37,7 @@ const rankings = [
 
 export default function Leaderboard() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 pb-20 relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 pb-20 relative overZORA-hidden">
       {/* Noun images as background decorations */}
       <img
         src="https://noun.pics/1308.png"
