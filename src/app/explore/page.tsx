@@ -93,9 +93,9 @@ const page = () => {
           {topCreators.map((creator, index) => (
             <div 
               key={index}
-              className="group bg-pink-200 backdrop-blur-xl border-4 border-blue-400 rounded-2xl p-6 flex flex-col gap-4 \
+              className="group bg-yellow-100 backdrop-blur-xl border-4 border-blue-400 rounded-2xl p-6 flex flex-col gap-4 \
               hover:shadow-xl hover:shadow-blue-300/20 transition-all duration-300 hover:border-bllue-600 \
-              hover:translate-y-[-4px] hover:bg-yellow-200 relative"
+              hover:translate-y-[-4px] hover:bg-red-200 relative"
             >
               {/* Move price to left side */}
               <div className="flex items-end justify-between mt-auto pt-4 border-t border-blue-200">
