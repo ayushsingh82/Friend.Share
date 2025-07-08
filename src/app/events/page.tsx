@@ -64,7 +64,7 @@ const EventsPage = () => {
   };
 
   const renderEventCard = (event: Event) => (
-    <div className="bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 rounded-2xl shadow-2xl p-6 border-2 border-blue-200 border-b-4 border-b-black max-w-md mx-auto">
+    <div className="bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 rounded-2xl shadow-2xl p-6 border-t-2 border-l-2 border-r border-b-8 border-t-blue-200 border-l-blue-200 border-r-blue-200 border-b-black max-w-md mx-auto">
       {/* Event Header */}
       <div className="mb-4">
         <h3 className="text-2xl font-black text-blue-900 mb-2" style={{
@@ -72,7 +72,7 @@ const EventsPage = () => {
         }}>
           {event.name}
         </h3>
-        <p className="text-blue-800 font-medium">{event.description}</p>
+        <p className="text-black font-medium">{event.description}</p>
       </div>
 
       {/* Event Details */}
@@ -86,7 +86,7 @@ const EventsPage = () => {
       </div>
 
       {/* Created Date - Small */}
-      <div className="text-xs text-blue-600 mb-4 text-center">
+      <div className="text-xs text-black mb-4 text-center">
         Created: {event.createdDate.toLocaleDateString()} at {event.createdDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
       </div>
 

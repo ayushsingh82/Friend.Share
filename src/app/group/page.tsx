@@ -25,6 +25,10 @@ const GroupPage = () => {
   const [groupName, setGroupName] = useState('');
   const [sharedAmount, setSharedAmount] = useState('');
   const [sharedDescription, setSharedDescription] = useState('');
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [formRecipientInputs, setFormRecipientInputs] = useState([
+    { id: 1, address: '' }
+  ]);
 
   // Mock group details - in real app this would come from props or API
   const [groupDetails] = useState<GroupDetails>({
@@ -81,6 +85,105 @@ const GroupPage = () => {
 
   const totalAmount = recipients.reduce((sum, recipient) => sum + recipient.amount, 0);
 
+  const createGroup = () => {
+    if (groupName && sharedDescription && sharedAmount) {
+      console.log('Group created:', { groupName, sharedDescription, sharedAmount });
+      setGroupName('');
+      setSharedDescription('');
+      setSharedAmount('');
+      setFormRecipientInputs([{ id: 1, address: '' }]);
+      setShowCreateForm(false);
+    }
+  };
+
+  const addFormRecipient = (inputId: number) => {
+    const input = formRecipientInputs.find(inp => inp.id === inputId);
+    if (input && input.address && sharedAmount) {
+      const newRecipient: Recipient = {
+        id: Date.now().toString(),
+        address: input.address,
+        amount: parseFloat(sharedAmount),
+        description: sharedDescription || 'Payment'
+      };
+      
+      setRecipients([...recipients, newRecipient]);
+      
+      // Clear this input
+      setFormRecipientInputs(prev => prev.map(inp => 
+        inp.id === inputId 
+          ? { ...inp, address: '' }
+          : inp
+      ));
+      
+      console.log('Recipient added successfully');
+    }
+  };
+
+  const addNewFormInput = () => {
+    const newId = Math.max(...formRecipientInputs.map(inp => inp.id)) + 1;
+    setFormRecipientInputs([...formRecipientInputs, { id: newId, address: '' }]);
+  };
+
+  const removeFormInput = (inputId: number) => {
+    if (formRecipientInputs.length > 1) {
+      setFormRecipientInputs(prev => prev.filter(inp => inp.id !== inputId));
+    }
+  };
+
+  const updateFormInput = (inputId: number, value: string) => {
+    setFormRecipientInputs(prev => prev.map(inp => 
+      inp.id === inputId ? { ...inp, address: value } : inp
+    ));
+  };
+
+  // Sample group data
+  const sampleGroup = {
+    id: '1',
+    name: 'Team Lunch Group',
+    description: 'Monthly team lunch payments for the development team. Everyone contributes equally for our team bonding sessions.',
+    totalRecipients: 8,
+    createdDate: new Date('2024-07-01T10:00:00'),
+    totalAmount: 2.5
+  };
+
+  const renderGroupCard = (group: any) => (
+    <div className="bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 rounded-2xl shadow-2xl p-6 border-t-2 border-l-2 border-r border-b-8 border-t-blue-200 border-l-blue-200 border-r-blue-200 border-b-black max-w-md mx-auto">
+      {/* Group Header */}
+      <div className="mb-4">
+        <h3 className="text-2xl font-black text-blue-900 mb-2" style={{
+          textShadow: '-1px 1px 0 #ffffff'
+        }}>
+          {group.name}
+        </h3>
+        <p className="text-black font-medium">{group.description}</p>
+      </div>
+
+      {/* Group Details */}
+      <div className="space-y-3 mb-6">
+        <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg border border-blue-300">
+          <span className="text-sm font-bold text-blue-700 uppercase tracking-wide">Total Recipients</span>
+          <span className="text-sm font-bold text-blue-900">{group.totalRecipients}</span>
+        </div>
+      </div>
+
+      {/* Created Date - Small */}
+      <div className="text-xs text-black mb-4 text-center">
+        Created: {group.createdDate.toLocaleDateString()} at {group.createdDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+      </div>
+
+      {/* View Details Button */}
+      <button
+        onClick={() => console.log('View details for group:', group.id)}
+        className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 font-bold shadow-lg border-2 border-green-400"
+        style={{
+          textShadow: '-1px 1px 0 #000000'
+        }}
+      >
+        VIEW DETAILS
+      </button>
+    </div>
+  );
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'text-yellow-600 bg-yellow-100';
@@ -112,38 +215,72 @@ const GroupPage = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Side - Form */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
-            <h2 className="text-3xl font-black mb-6 text-gray-800" style={{
-              textShadow: '-2px 2px 0 #e5e7eb'
-            }}>
-              ADD RECIPIENTS
-            </h2>
-            <p className="text-sm text-gray-600 mb-6 font-medium">
-              Add recipients one by one with individual amounts and descriptions
-            </p>
-            
-            {/* Group Name */}
-            <div className="mb-6">
-              <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
-                Group Name *
-              </label>
-              <input
-                type="text"
-                placeholder="Enter group name"
-                value={groupName}
-                onChange={(e) => setGroupName(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium text-gray-900 placeholder-gray-500 bg-white"
-              />
-            </div>
+        {/* Create Group Button */}
+        <div className="flex justify-end mb-8">
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="px-8 py-4 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all transform hover:scale-105 font-bold text-xl shadow-2xl"
+            style={{
+              textShadow: '-2px 2px 0 #000000'
+            }}
+          >
+            + CREATE GROUP
+          </button>
+        </div>
 
-            {/* Shared Amount and Description */}
-            <div className="space-y-6 mb-8">
+        {/* Create Group Form */}
+        {showCreateForm && (
+          <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 backdrop-blur-sm rounded-2xl shadow-2xl p-6 border-2 border-blue-200 mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-black text-gray-800" style={{
+                textShadow: '-1px 1px 0 #e5e7eb'
+              }}>
+                CREATE GROUP
+              </h2>
+              <button
+                onClick={() => setShowCreateForm(false)}
+                className="text-gray-500 hover:text-red-600 text-xl font-bold transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mb-4 font-medium">
+              Fill in the group details to create your new payment group
+            </p>
+
+            <div className="space-y-4">
+              {/* Group Name */}
+              <div>
+                <label className="block text-sm font-bold text-blue-700 mb-2 uppercase tracking-wide">
+                  Group Name *
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter group name"
+                  value={groupName}
+                  onChange={(e) => setGroupName(e.target.value)}
+                  className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-medium text-gray-900 placeholder-gray-500 bg-white"
+                />
+              </div>
+
+              {/* Group Description */}
+              <div>
+                <label className="block text-sm font-bold text-purple-700 mb-2 uppercase tracking-wide">
+                  Group Description *
+                </label>
+                <textarea
+                  placeholder="Describe your group"
+                  value={sharedDescription}
+                  onChange={(e) => setSharedDescription(e.target.value)}
+                  rows={3}
+                  className="w-full px-3 py-2 border-2 border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none font-medium text-gray-900 placeholder-gray-500 bg-white"
+                />
+              </div>
+
               {/* Shared Amount */}
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
-                  Amount (ETH) * 
+                <label className="block text-sm font-bold text-green-700 mb-2 uppercase tracking-wide">
+                  Amount (ETH) *
                 </label>
                 <input
                   type="number"
@@ -151,149 +288,93 @@ const GroupPage = () => {
                   placeholder="0.0"
                   value={sharedAmount}
                   onChange={(e) => setSharedAmount(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium text-gray-900 placeholder-gray-500 bg-white"
+                  className="w-full px-3 py-2 border-2 border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent font-medium text-gray-900 placeholder-gray-500 bg-white"
                 />
               </div>
 
-              {/* Shared Description */}
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
-                  Description 
+              {/* Recipients Section */}
+              <div className="space-y-3">
+                <label className="block text-sm font-bold text-orange-700 mb-2 uppercase tracking-wide">
+                  Recipients *
                 </label>
-                <textarea
-                  placeholder="What's this payment for?"
-                  value={sharedDescription}
-                  onChange={(e) => setSharedDescription(e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none font-medium text-gray-900 placeholder-gray-500 bg-white"
-                />
-              </div>
-            </div>
-
-            {/* Dynamic Recipient Address Fields */}
-            <div className="space-y-4">
-              {recipientInputs.map((input, index) => (
-                <div key={input.id} className="p-4 border-2 border-gray-200 rounded-lg bg-gray-50">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold text-gray-800">Recipient {index + 1}</h3>
-                    {recipientInputs.length > 1 && (
+                
+                {formRecipientInputs.map((input, index) => (
+                  <div key={input.id} className="p-3 border-2 border-orange-200 rounded-lg bg-orange-50">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="text-sm font-bold text-orange-800">Recipient {index + 1}</h4>
+                      {formRecipientInputs.length > 1 && (
+                        <button
+                          onClick={() => removeFormInput(input.id)}
+                          className="px-2 py-1 text-orange-600 hover:bg-orange-100 rounded-md transition-colors font-bold text-sm"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                    
+                    {/* Recipient Address */}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Enter wallet address or ENS name"
+                        value={input.address}
+                        onChange={(e) => updateFormInput(input.id, e.target.value)}
+                        className="flex-1 px-3 py-2 border-2 border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent font-medium text-gray-900 placeholder-gray-500 bg-white text-sm"
+                      />
                       <button
-                        onClick={() => removeInput(input.id)}
-                        className="px-3 py-1 text-red-600 hover:bg-red-100 rounded-md transition-colors font-bold"
+                        onClick={() => addFormRecipient(input.id)}
+                        disabled={!input.address || !sharedAmount}
+                        className={`px-4 py-2 text-white rounded-lg transition-all transform hover:scale-105 font-bold shadow-lg text-sm ${
+                          input.address && sharedAmount
+                            ? 'bg-orange-500 hover:bg-orange-600'
+                            : 'bg-gray-400 cursor-not-allowed'
+                        }`}
                       >
-                        ✕
-                      </button>
-                    )}
-                  </div>
-                  
-                  {/* Recipient Address */}
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Enter wallet address or ENS name"
-                      value={input.address}
-                      onChange={(e) => updateInput(input.id, e.target.value)}
-                      className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium text-gray-900 placeholder-gray-500 bg-white"
-                    />
-                    <button
-                      onClick={() => addRecipient(input.id)}
-                      disabled={!input.address || !sharedAmount}
-                      className={`px-6 py-3 text-white rounded-lg transition-all transform hover:scale-105 font-bold shadow-lg ${
-                        input.address && sharedAmount
-                          ? 'bg-red-600 hover:bg-red-700'
-                          : 'bg-gray-400 cursor-not-allowed'
-                      }`}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              {/* Add New Input Button */}
-              <button
-                onClick={addNewInput}
-                className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 font-bold shadow-lg"
-              >
-                + ADD ANOTHER RECIPIENT
-              </button>
-            </div>
-
-            {/* Added Recipients List */}
-            {recipients.length > 0 && (
-              <div className="mt-8">
-                <h3 className="text-xl font-black text-gray-800 mb-4 uppercase tracking-wide" style={{
-                  textShadow: '-1px 1px 0 #e5e7eb'
-                }}>
-                  Added Recipients
-                </h3>
-                <div className="space-y-3">
-                  {recipients.map((recipient) => (
-                    <div key={recipient.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border border-red-200 shadow-md">
-                      <div className="flex-1">
-                        <p className="font-bold text-gray-800">{recipient.address}</p>
-                      </div>
-                      <button
-                        onClick={() => removeRecipient(recipient.id)}
-                        className="ml-4 px-3 py-1 text-red-600 hover:bg-red-100 rounded-md transition-colors font-bold"
-                      >
-                        Remove
+                        +
                       </button>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
+                  </div>
+                ))}
 
-            {/* Create Group Button */}
-            <button className="w-full mt-8 px-6 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all transform hover:scale-105 font-black text-xl shadow-2xl" style={{
-              textShadow: '-2px 2px 0 #000000'
-            }}>
-              CREATE GROUP PAYMENT
-            </button>
-          </div>
-
-          {/* Right Side - Group Details */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
-            <h2 className="text-3xl font-black mb-6 text-gray-800" style={{
-              textShadow: '-2px 2px 0 #e5e7eb'
-            }}>
-              GROUP DETAILS
-            </h2>
-            
-            {/* Group Info */}
-            <div className="space-y-6">
-              {/* Group Name */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg border border-blue-300 shadow-md">
-                <span className="text-sm font-bold text-gray-600 uppercase tracking-wide">Group Name</span>
-                <span className="text-sm font-bold text-gray-800">{groupName || 'Unnamed Group'}</span>
+                {/* Add New Recipient Button */}
+                <button
+                  onClick={addNewFormInput}
+                  className="w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all transform hover:scale-105 font-bold shadow-lg text-sm"
+                >
+                  + ADD ANOTHER RECIPIENT
+                </button>
               </div>
 
-              {/* Total Recipients */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-100 to-purple-200 rounded-lg border border-purple-300 shadow-md">
-                <span className="text-sm font-bold text-gray-600 uppercase tracking-wide">Total Recipients</span>
-                <span className="text-xl font-black text-purple-700">{recipients.length}</span>
-              </div>
-
-              {/* Total Amount */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-100 to-green-200 rounded-lg border border-green-300 shadow-md">
-                <span className="text-sm font-bold text-gray-600 uppercase tracking-wide">Total Amount</span>
-                <span className="text-xl font-black text-green-700">{totalAmount.toFixed(3)} ETH</span>
-              </div>
-
-              {/* Created At */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg border border-gray-300 shadow-md">
-                <span className="text-sm font-bold text-gray-600 uppercase tracking-wide">Created</span>
-                <span className="text-sm font-bold text-gray-800">
-                  {groupDetails.createdAt.toLocaleDateString()} at {groupDetails.createdAt.toLocaleTimeString()}
-                </span>
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={createGroup}
+                  disabled={!groupName || !sharedDescription || !sharedAmount}
+                  className={`flex-1 px-4 py-3 text-white rounded-lg transition-all transform hover:scale-105 font-bold shadow-lg ${
+                    groupName && sharedDescription && sharedAmount
+                      ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800'
+                      : 'bg-gray-400 cursor-not-allowed'
+                  }`}
+                  style={{
+                    textShadow: groupName && sharedDescription && sharedAmount ? '-1px 1px 0 #000000' : 'none'
+                  }}
+                >
+                  CREATE GROUP
+                </button>
+                <button
+                  onClick={() => setShowCreateForm(false)}
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700 rounded-lg hover:from-gray-300 hover:to-gray-400 transition-all transform hover:scale-105 font-bold shadow-lg"
+                >
+                  CANCEL
+                </button>
               </div>
             </div>
-
-
-
-
           </div>
+        )}
+
+        {/* Single Group Display */}
+        <div className="flex justify-center">
+          {renderGroupCard(sampleGroup)}
         </div>
       </div>
     </div>
