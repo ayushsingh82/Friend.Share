@@ -20,19 +20,21 @@ const Navbar = () => {
 {/*        
           <ConnectButton /> */}
        
-       
-       
-        <div className="hidden md:flex flex-1 justify-end space-x-6">
-          <Link href="/group" className="text-white hover:text-yellow-300 transition-colors">
+        {/* Center: Navigation Links with Yellow Background */}
+        <div className="hidden md:flex justify-center space-x-2">
+          <Link href="/group" className="bg-yellow-500 text-black px-2 py-1 rounded-lg hover:bg-yellow-400 transition-colors font-semibold">
             Group
           </Link>
-          <Link href="/event" className="text-white hover:text-yellow-300 transition-colors">
+          <Link href="/event" className="bg-yellow-500 text-black px-2 py-1 rounded-lg hover:bg-yellow-400 transition-colors font-semibold">
             Event
           </Link>
-        
+          <Link href="/invites" className="bg-yellow-500 text-black px-2 py-1 rounded-lg hover:bg-yellow-400 transition-colors font-semibold">
+            Invites
+          </Link>
         </div>
       
-      
+        {/* Right: Empty space for balance */}
+        <div className="flex-1"></div>
       </div>
     </nav>
   );

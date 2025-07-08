@@ -19,11 +19,12 @@ interface GroupDetails {
 
 const GroupPage = () => {
   const [recipients, setRecipients] = useState<Recipient[]>([]);
-  const [currentRecipient, setCurrentRecipient] = useState({
-    address: '',
-    amount: '',
-    description: ''
-  });
+  const [recipientInputs, setRecipientInputs] = useState([
+    { id: 1, address: '' }
+  ]);
+  const [groupName, setGroupName] = useState('');
+  const [sharedAmount, setSharedAmount] = useState('');
+  const [sharedDescription, setSharedDescription] = useState('');
 
   // Mock group details - in real app this would come from props or API
   const [groupDetails] = useState<GroupDetails>({
@@ -34,18 +35,44 @@ const GroupPage = () => {
     recipients: []
   });
 
-  const addRecipient = () => {
-    if (currentRecipient.address && currentRecipient.amount && currentRecipient.description) {
+  const addRecipient = (inputId: number) => {
+    const input = recipientInputs.find(inp => inp.id === inputId);
+    if (input && input.address && sharedAmount) {
       const newRecipient: Recipient = {
         id: Date.now().toString(),
-        address: currentRecipient.address,
-        amount: parseFloat(currentRecipient.amount),
-        description: currentRecipient.description
+        address: input.address,
+        amount: parseFloat(sharedAmount),
+        description: sharedDescription || 'Payment'
       };
       
       setRecipients([...recipients, newRecipient]);
-      setCurrentRecipient({ address: '', amount: '', description: '' });
+      
+      // Clear this input
+      setRecipientInputs(prev => prev.map(inp => 
+        inp.id === inputId 
+          ? { ...inp, address: '' }
+          : inp
+      ));
+      
+      console.log('Recipient added successfully');
     }
+  };
+
+  const addNewInput = () => {
+    const newId = Math.max(...recipientInputs.map(inp => inp.id)) + 1;
+    setRecipientInputs([...recipientInputs, { id: newId, address: '' }]);
+  };
+
+  const removeInput = (inputId: number) => {
+    if (recipientInputs.length > 1) {
+      setRecipientInputs(prev => prev.filter(inp => inp.id !== inputId));
+    }
+  };
+
+  const updateInput = (inputId: number, value: string) => {
+    setRecipientInputs(prev => prev.map(inp => 
+      inp.id === inputId ? { ...inp, address: value } : inp
+    ));
   };
 
   const removeRecipient = (id: string) => {
@@ -93,59 +120,103 @@ const GroupPage = () => {
             }}>
               ADD RECIPIENTS
             </h2>
+            <p className="text-sm text-gray-600 mb-6 font-medium">
+              Add recipients one by one with individual amounts and descriptions
+            </p>
             
-            {/* Form Fields */}
-            <div className="space-y-6">
-              {/* Recipient Address */}
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
-                  Recipient Address
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Enter wallet address or ENS name"
-                    value={currentRecipient.address}
-                    onChange={(e) => setCurrentRecipient({...currentRecipient, address: e.target.value})}
-                    className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium"
-                  />
-                  <button
-                    onClick={addRecipient}
-                    className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all transform hover:scale-105 font-bold shadow-lg"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
+            {/* Group Name */}
+            <div className="mb-6">
+              <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                Group Name *
+              </label>
+              <input
+                type="text"
+                placeholder="Enter group name"
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium text-gray-900 placeholder-gray-500 bg-white"
+              />
+            </div>
 
-              {/* Amount */}
+            {/* Shared Amount and Description */}
+            <div className="space-y-6 mb-8">
+              {/* Shared Amount */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
-                  Amount (ETH)
+                  Amount (ETH) * 
                 </label>
                 <input
                   type="number"
                   step="0.001"
                   placeholder="0.0"
-                  value={currentRecipient.amount}
-                  onChange={(e) => setCurrentRecipient({...currentRecipient, amount: e.target.value})}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium"
+                  value={sharedAmount}
+                  onChange={(e) => setSharedAmount(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium text-gray-900 placeholder-gray-500 bg-white"
                 />
               </div>
 
-              {/* Description */}
+              {/* Shared Description */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
-                  Description
+                  Description 
                 </label>
                 <textarea
                   placeholder="What's this payment for?"
-                  value={currentRecipient.description}
-                  onChange={(e) => setCurrentRecipient({...currentRecipient, description: e.target.value})}
+                  value={sharedDescription}
+                  onChange={(e) => setSharedDescription(e.target.value)}
                   rows={3}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none font-medium"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none font-medium text-gray-900 placeholder-gray-500 bg-white"
                 />
               </div>
+            </div>
+
+            {/* Dynamic Recipient Address Fields */}
+            <div className="space-y-4">
+              {recipientInputs.map((input, index) => (
+                <div key={input.id} className="p-4 border-2 border-gray-200 rounded-lg bg-gray-50">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold text-gray-800">Recipient {index + 1}</h3>
+                    {recipientInputs.length > 1 && (
+                      <button
+                        onClick={() => removeInput(input.id)}
+                        className="px-3 py-1 text-red-600 hover:bg-red-100 rounded-md transition-colors font-bold"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                  
+                  {/* Recipient Address */}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Enter wallet address or ENS name"
+                      value={input.address}
+                      onChange={(e) => updateInput(input.id, e.target.value)}
+                      className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium text-gray-900 placeholder-gray-500 bg-white"
+                    />
+                    <button
+                      onClick={() => addRecipient(input.id)}
+                      disabled={!input.address || !sharedAmount}
+                      className={`px-6 py-3 text-white rounded-lg transition-all transform hover:scale-105 font-bold shadow-lg ${
+                        input.address && sharedAmount
+                          ? 'bg-red-600 hover:bg-red-700'
+                          : 'bg-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              {/* Add New Input Button */}
+              <button
+                onClick={addNewInput}
+                className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 font-bold shadow-lg"
+              >
+                + ADD ANOTHER RECIPIENT
+              </button>
             </div>
 
             {/* Added Recipients List */}
@@ -206,14 +277,6 @@ const GroupPage = () => {
                 <span className="text-xl font-black text-green-700">{totalAmount.toFixed(3)} ETH</span>
               </div>
 
-              {/* Status */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg border border-gray-300 shadow-md">
-                <span className="text-sm font-bold text-gray-600 uppercase tracking-wide">Status</span>
-                <span className={`px-4 py-2 rounded-full text-xs font-black ${getStatusColor(groupDetails.status)} shadow-md`}>
-                  {groupDetails.status.charAt(0).toUpperCase() + groupDetails.status.slice(1).toUpperCase()}
-                </span>
-              </div>
-
               {/* Created At */}
               <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg border border-gray-300 shadow-md">
                 <span className="text-sm font-bold text-gray-600 uppercase tracking-wide">Created</span>
@@ -264,9 +327,6 @@ const GroupPage = () => {
 
             {/* Quick Actions */}
             <div className="mt-8 space-y-3">
-              <button className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 font-bold shadow-lg">
-                Share Group Link
-              </button>
               <button className="w-full px-4 py-3 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700 rounded-lg hover:from-gray-300 hover:to-gray-400 transition-all transform hover:scale-105 font-bold shadow-lg">
                 Export Details
               </button>
