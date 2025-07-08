@@ -25,8 +25,8 @@ const Navbar = () => {
           <Link href="/group" className="bg-yellow-500 text-black px-2 py-1 rounded-lg hover:bg-yellow-400 transition-colors font-semibold">
             Group
           </Link>
-          <Link href="/event" className="bg-yellow-500 text-black px-2 py-1 rounded-lg hover:bg-yellow-400 transition-colors font-semibold">
-            Event
+          <Link href="/events" className="bg-yellow-500 text-black px-2 py-1 rounded-lg hover:bg-yellow-400 transition-colors font-semibold">
+            Events
           </Link>
           <Link href="/invites" className="bg-yellow-500 text-black px-2 py-1 rounded-lg hover:bg-yellow-400 transition-colors font-semibold">
             Invites

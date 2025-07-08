@@ -232,8 +232,6 @@ const GroupPage = () => {
                     <div key={recipient.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border border-red-200 shadow-md">
                       <div className="flex-1">
                         <p className="font-bold text-gray-800">{recipient.address}</p>
-                        <p className="text-sm text-gray-600 font-medium">{recipient.description}</p>
-                        <p className="text-sm font-black text-red-600">{recipient.amount} ETH</p>
                       </div>
                       <button
                         onClick={() => removeRecipient(recipient.id)}
@@ -265,10 +263,16 @@ const GroupPage = () => {
             
             {/* Group Info */}
             <div className="space-y-6">
-              {/* Group ID */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg border border-gray-300 shadow-md">
-                <span className="text-sm font-bold text-gray-600 uppercase tracking-wide">Group ID</span>
-                <span className="text-sm font-mono font-bold text-gray-800">{groupDetails.id}</span>
+              {/* Group Name */}
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg border border-blue-300 shadow-md">
+                <span className="text-sm font-bold text-gray-600 uppercase tracking-wide">Group Name</span>
+                <span className="text-sm font-bold text-gray-800">{groupName || 'Unnamed Group'}</span>
+              </div>
+
+              {/* Total Recipients */}
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-100 to-purple-200 rounded-lg border border-purple-300 shadow-md">
+                <span className="text-sm font-bold text-gray-600 uppercase tracking-wide">Total Recipients</span>
+                <span className="text-xl font-black text-purple-700">{recipients.length}</span>
               </div>
 
               {/* Total Amount */}
@@ -286,51 +290,9 @@ const GroupPage = () => {
               </div>
             </div>
 
-            {/* Recipients Summary */}
-            <div className="mt-8">
-              <h3 className="text-xl font-black text-gray-800 mb-4 uppercase tracking-wide" style={{
-                textShadow: '-1px 1px 0 #e5e7eb'
-              }}>
-                Recipients ({recipients.length})
-              </h3>
-              {recipients.length === 0 ? (
-                <div className="text-center py-8 text-gray-500 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200">
-                  <div className="text-6xl mb-4">👥</div>
-                  <p className="text-lg font-bold mb-2">No recipients added yet</p>
-                  <p className="text-sm font-medium">Add recipients using the form on the left</p>
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-64 overflow-y-auto">
-                  {recipients.map((recipient, index) => (
-                    <div key={recipient.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border border-red-200 shadow-md">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
-                          <span className="text-sm font-black text-white">{index + 1}</span>
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold text-gray-800 truncate max-w-32">
-                            {recipient.address}
-                          </p>
-                          <p className="text-xs text-gray-600 truncate max-w-32 font-medium">
-                            {recipient.description}
-                          </p>
-                        </div>
-                      </div>
-                      <span className="text-sm font-black text-red-600">
-                        {recipient.amount} ETH
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
 
-            {/* Quick Actions */}
-            <div className="mt-8 space-y-3">
-              <button className="w-full px-4 py-3 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700 rounded-lg hover:from-gray-300 hover:to-gray-400 transition-all transform hover:scale-105 font-bold shadow-lg">
-                Export Details
-              </button>
-            </div>
+
+
           </div>
         </div>
       </div>
