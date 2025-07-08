@@ -23,15 +23,13 @@ const Navbar = () => {
        
        
         <div className="hidden md:flex flex-1 justify-end space-x-6">
-          <Link href="/register" className="text-white hover:text-yellow-300 transition-colors">
-            Register
+          <Link href="/group" className="text-white hover:text-yellow-300 transition-colors">
+            Group
           </Link>
-          <Link href="/leaderboard" className="text-white hover:text-yellow-300 transition-colors">
-            leaderboard
+          <Link href="/event" className="text-white hover:text-yellow-300 transition-colors">
+            Event
           </Link>
-          <Link href="/explore" className="text-white hover:text-yellow-300 transition-colors">
-            Explore
-          </Link>
+        
         </div>
       
       
