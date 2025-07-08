@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       {/* Hero Section - Dynamic Background */}
-      <section className="relative min-h-screen bg-gradient-to-b from-red-500 via-red-600 to-red-700 overETH-hidden">
+      <section className="relative min-h-screen bg-gradient-to-b from-green-500 via-green-600 to-green-700 overETH-hidden">
         {/* Noun Images */}
         <div className="absolute inset-0 overETH-hidden pointer-events-none">
           {/* Left Noun */}
@@ -37,37 +37,37 @@ export default function Home() {
               textShadow: '-4px 4px 0 #ffffff',
               WebkitTextStroke: '2px #ffffff'
             }}>
-              ZORA.
-              <span className="text-yellow-500">Connect</span>
+              Friend.
+              <span className="text-yellow-500">Share</span>
             </h1>
-            <p className="text-xl md:text-2xl text-white font-bold max-w-2xl mx-auto">
-            Get instant access to and invest in your favorite creators & experts.
+            <p className="text-xl md:text-2xl text-white font-bold max-w-3xl mx-auto">
+              Smart group payments & savings with DeFi simplicity, AI-driven automation, and social coordination
             </p>
           </div>
 
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
             <div className="bg-blue-600 p-6 rounded-xl border border-white/20 text-white transform hover:scale-105 transition-all">
-              <div className="text-4xl mb-4">🎨</div>
-              <h3 className="text-xl font-bold mb-2">FIND CREATORS</h3>
-              <p className="text-white/90">Discover creators across a variety of specialties</p>
+              <div className="text-4xl mb-4">💰</div>
+              <h3 className="text-xl font-bold mb-2">SHARED SAVINGS</h3>
+              <p className="text-white/90">Set deadlines, contributions per person, and milestone-based unlocks</p>
             </div>
             <div className="bg-blue-600 p-6 rounded-xl border border-white/20 text-white transform hover:scale-105 transition-all">
-              <div className="text-4xl mb-4">🚀</div>
-              <h3 className="text-xl font-bold mb-2">BUY THEIR TIME</h3>
-              <p className="text-white/90">Buy minutes of the creators you want to connect with or invest in</p>
+              <div className="text-4xl mb-4">⚡</div>
+              <h3 className="text-xl font-bold mb-2">SPLIT BILLS</h3>
+              <p className="text-white/90">Split bills instantly with smart group coordination and AI reminders</p>
             </div>
             <div className="bg-blue-600 p-6 rounded-xl border border-white/20 text-white transform hover:scale-105 transition-all">
-              <div className="text-4xl mb-4">💎</div>
-              <h3 className="text-xl font-bold mb-2">CONNECT</h3>
-              <p className="text-white/90">Connect with powerful creators through direct messages, API calls, and automated tasks.</p>
+              <div className="text-4xl mb-4">🤝</div>
+              <h3 className="text-xl font-bold mb-2">FUND CAUSES</h3>
+              <p className="text-white/90">Pool money and fund causes with public-good-friendly features</p>
             </div>
           </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-col md:flex-row gap-4 justify-center">
             <button className="px-8 py-4 bg-yellow-500 text-black rounded-full font-bold text-lg hover:bg-yellow-400 transition-colors transform hover:scale-105">
-              Get Started
+              Create Group
             </button>
             <button className="px-8 py-4 bg-black/80 text-white rounded-full font-bold text-lg hover:bg-black transition-colors transform hover:scale-105">
               Learn More
@@ -106,22 +106,22 @@ export default function Home() {
             <div className="bg-white/20 backdrop-blur-sm p-8 rounded-xl border border-white/30 text-white text-center transform hover:scale-105 transition-all">
               <div className="text-4xl mb-4">🔗</div>
               <h3 className="text-xl font-bold mb-4">Connect</h3>
-              <p className="text-white/90">Link your wallet</p>
+              <p className="text-white/90">Link your wallet & invite friends</p>
             </div>
             <div className="bg-white/20 backdrop-blur-sm p-8 rounded-xl border border-white/30 text-white text-center transform hover:scale-105 transition-all">
-              <div className="text-4xl mb-4">🎨</div>
-              <h3 className="text-xl font-bold mb-4">Create</h3>
-              <p className="text-white/90">Design your coin & NFT</p>
+              <div className="text-4xl mb-4">🎯</div>
+              <h3 className="text-xl font-bold mb-4">Set Goals</h3>
+              <p className="text-white/90">Create savings goals or split bills</p>
             </div>
             <div className="bg-white/20 backdrop-blur-sm p-8 rounded-xl border border-white/30 text-white text-center transform hover:scale-105 transition-all">
-              <div className="text-4xl mb-4">🚀</div>
-              <h3 className="text-xl font-bold mb-4">Mint</h3>
-              <p className="text-white/90">Launch on ETH</p>
+              <div className="text-4xl mb-4">🤖</div>
+              <h3 className="text-xl font-bold mb-4">AI Automation</h3>
+              <p className="text-white/90">Smart reminders & automated payments</p>
             </div>
             <div className="bg-white/20 backdrop-blur-sm p-8 rounded-xl border border-white/30 text-white text-center transform hover:scale-105 transition-all">
               <div className="text-4xl mb-4">🌱</div>
-              <h3 className="text-xl font-bold mb-4">Share</h3>
-              <p className="text-white/90">Grow your community</p>
+              <h3 className="text-xl font-bold mb-4">Grow Together</h3>
+              <p className="text-white/90">Achieve goals & build community</p>
             </div>
           </div>
         </div>
@@ -151,25 +151,35 @@ export default function Home() {
 
         <div className="container mx-auto px-4 relative z-20">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-yellow-300 via-white to-yellow-300 bg-clip-text text-transparent animate-gradient">
-            Why Choose Us
+            Why Choose Friend.Share
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 text-white transform hover:scale-105 transition-all">
               <div className="text-4xl mb-4">✨</div>
-              <h3 className="text-2xl font-bold mb-4">All-in-One Platform</h3>
-              <p className="text-lg">Create your coin, claim your ENS, and mint your NFT all in one place. No technical knowledge required.</p>
+              <h3 className="text-2xl font-bold mb-4">DeFi Simplicity</h3>
+              <p className="text-lg">Blockchain-powered payments with the simplicity of traditional apps. No technical knowledge required.</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 text-white transform hover:scale-105 transition-all">
+              <div className="text-4xl mb-4">🤖</div>
+              <h3 className="text-2xl font-bold mb-4">AI-Driven Automation</h3>
+              <p className="text-lg">Smart reminders, automated payments, and intelligent coordination to keep everyone on track.</p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 text-white transform hover:scale-105 transition-all">
               <div className="text-4xl mb-4">👥</div>
-              <h3 className="text-2xl font-bold mb-4">Community Driven</h3>
-              <p className="text-lg">Join a vibrant community of creators and collectors. Get funded through our DAO governance model.</p>
+              <h3 className="text-2xl font-bold mb-4">Social Coordination</h3>
+              <p className="text-lg">Built-in chat, progress tracking, and milestone celebrations to keep groups motivated.</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 text-white transform hover:scale-105 transition-all">
+              <div className="text-4xl mb-4">🌍</div>
+              <h3 className="text-2xl font-bold mb-4">Public Good Friendly</h3>
+              <p className="text-lg">Fund causes, support communities, and make a positive impact with transparent, accountable payments.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] relative overETH-hidden">
+      {/* Use Cases Section */}
+      <section className="py-20 bg-gradient-to-b from-[#4F46E5] via-[#7C3AED] to-[#1E40AF] relative overETH-hidden">
         {/* Noun Images */}
         <div className="absolute inset-0 overETH-hidden pointer-events-none">
           {/* Left Noun */}
@@ -190,15 +200,61 @@ export default function Home() {
           </div>
         </div>
 
+        <div className="container mx-auto px-4 relative z-20">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
+            Perfect For
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 text-white text-center transform hover:scale-105 transition-all">
+              <div className="text-4xl mb-4">🏠</div>
+              <h3 className="text-xl font-bold mb-4">Roommates</h3>
+              <p className="text-white/90">Split rent, utilities, and household expenses with automatic reminders</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 text-white text-center transform hover:scale-105 transition-all">
+              <div className="text-4xl mb-4">🎉</div>
+              <h3 className="text-xl font-bold mb-4">Events & Trips</h3>
+              <p className="text-white/90">Plan group vacations, parties, and events with shared expense tracking</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 text-white text-center transform hover:scale-105 transition-all">
+              <div className="text-4xl mb-4">🎯</div>
+              <h3 className="text-xl font-bold mb-4">Savings Goals</h3>
+              <p className="text-white/90">Save together for big purchases, investments, or charitable causes</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-b from-[#8B5CF6] via-[#BA55D3] to-[#673AB7] relative overETH-hidden">
+        {/* Noun Images */}
+        <div className="absolute inset-0 overETH-hidden pointer-events-none">
+          {/* Left Noun */}
+          <div className="absolute left-0 top-1/4 w-56 h-56 opacity-100 z-10">
+            <img
+              src={`${NOUNS_IMAGE_BASE}1308.png`}
+              alt="NOUN 1308"
+              className="w-full h-full object-contain drop-shadow-2xl rounded-full"
+            />
+          </div>
+          {/* Right Noun */}
+          <div className="absolute right-0 top-1/3 w-48 h-48 opacity-100 z-10">
+            <img
+              src={`${NOUNS_IMAGE_BASE}1309.png`}
+              alt="NOUN 1309"
+              className="w-full h-full object-contain drop-shadow-2xl rounded-full"
+            />
+          </div>
+        </div>
+
         <div className="container mx-auto px-4 text-center relative z-20">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-          ZORA.Connect
+            Ready to Share & Save?
           </h2>
           <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto">
-            Join thousands of creators who are already building their legacy on ZORA.Connect
+            Join thousands of users who are already pooling money, splitting costs, and funding causes with Friend.Share
           </p>
           <button className="px-12 py-5 bg-white text-[#8B5CF6] rounded-full font-bold text-xl hover:bg-white/90 transition-colors transform hover:scale-105 shadow-lg">
-            Start Creating Now
+            Start Your Group Today
           </button>
         </div>
       </section>

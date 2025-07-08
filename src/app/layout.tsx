@@ -8,7 +8,7 @@ import Providers from './provider'
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Zora Connect",
+  title: "Friend Share",
   description: "Get instant access to and invest in your favorite creators & experts.",
 };
 
@@ -23,8 +23,9 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           {children}
-          <Footer />
+         
         </Providers>
+        <Footer />
       </body>
     </html>
   );
