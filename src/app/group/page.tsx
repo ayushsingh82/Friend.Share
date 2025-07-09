@@ -195,6 +195,15 @@ const GroupPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-700 to-red-800 relative overflow-hidden">
+      {/* Noun Image - Top Left */}
+      <div className="absolute top-8 left-8 w-48 h-48 opacity-80 z-10">
+        <img
+          src="https://noun.pics/1310.png"
+          alt="NOUN 1310"
+          className="w-full h-full object-contain drop-shadow-2xl rounded-full"
+        />
+      </div>
+      
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.1%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
@@ -219,7 +228,7 @@ const GroupPage = () => {
         <div className="flex justify-end mb-8">
           <button
             onClick={() => setShowCreateForm(true)}
-            className="px-8 py-4 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all transform hover:scale-105 font-bold text-xl shadow-2xl"
+            className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-red-700 transition-all transform hover:scale-105 font-bold text-xl shadow-2xl"
             style={{
               textShadow: '-2px 2px 0 #000000'
             }}

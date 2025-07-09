@@ -115,7 +115,16 @@ const EventsPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-yellow-200 p-6">
+    <div className="min-h-screen bg-yellow-200 p-6 relative">
+      {/* Noun Image - Top Left */}
+      <div className="absolute top-8 left-8 w-48 h-48 opacity-80 z-10">
+        <img
+          src="https://noun.pics/1311.png"
+          alt="NOUN 1311"
+          className="w-full h-full object-contain drop-shadow-2xl rounded-full"
+        />
+      </div>
+      
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 text-center">

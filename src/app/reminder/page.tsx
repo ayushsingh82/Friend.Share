@@ -98,7 +98,16 @@ const ReminderPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#4F46E5] via-[#7C3AED] to-[#1E40AF] p-6">
+    <div className="min-h-screen bg-gradient-to-b from-[#4F46E5] via-[#7C3AED] to-[#1E40AF] p-6 relative">
+      {/* Noun Image - Top Left */}
+      <div className="absolute top-8 left-8 w-48 h-48 opacity-80 z-10">
+        <img
+          src="https://noun.pics/1312.png"
+          alt="NOUN 1312"
+          className="w-full h-full object-contain drop-shadow-2xl rounded-full"
+        />
+      </div>
+      
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -114,7 +123,7 @@ const ReminderPage = () => {
         </div>
 
         {/* AI Assistant Card */}
-        <div className="bg-gradient-to-b from-green-500 via-green-600 to-green-700 p-6 rounded-xl border border-white/20 mb-8">
+        <div className="bg-gradient-to-b from-green-500 via-green-600 to-green-700 p-6 rounded-xl border border-white/20 border-b-8 border-b-black mb-8">
           <div className="flex items-center gap-4 mb-4">
             <div className="text-3xl">🤖</div>
             <div>
@@ -170,7 +179,7 @@ const ReminderPage = () => {
             groupReminders.map((reminder) => (
               <div
                 key={reminder.id}
-                className="bg-orange-200 p-6 rounded-xl border border-orange-300 hover:scale-105 transition-all cursor-pointer"
+                className="bg-orange-200 p-6 rounded-xl border border-orange-300 border-b-8 border-b-black hover:scale-105 transition-all cursor-pointer"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-3">
@@ -210,7 +219,7 @@ const ReminderPage = () => {
             eventReminders.map((reminder) => (
               <div
                 key={reminder.id}
-                className="bg-yellow-200 p-6 rounded-xl border border-yellow-300 hover:scale-105 transition-all cursor-pointer"
+                className="bg-orange-200 p-6 rounded-xl border border-orange-300 border-b-8 border-b-black hover:scale-105 transition-all cursor-pointer"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-3">
@@ -250,7 +259,7 @@ const ReminderPage = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="mt-12 bg-gradient-to-b from-green-500 via-green-600 to-green-700 p-6 rounded-xl border border-white/20">
+        <div className="mt-12 bg-gradient-to-b from-green-500 via-green-600 to-green-700 p-6 rounded-xl border border-white/20 border-b-8 border-b-black">
           <h3 className="text-xl font-bold text-white mb-4">Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <button className="bg-amber-200 text-black p-4 rounded-lg font-bold hover:scale-105 transition-all">
