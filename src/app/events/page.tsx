@@ -90,21 +90,32 @@ const EventsPage = () => {
         Created: {event.createdDate.toLocaleDateString()} at {event.createdDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
       </div>
 
-      {/* Deposit Button */}
-      <button
-        onClick={() => depositToEvent(event.id)}
-        className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 font-bold shadow-lg border-2 border-green-400"
-        style={{
-          textShadow: '-1px 1px 0 #000000'
-        }}
-      >
-        DEPOSIT
-      </button>
+      {/* Action Buttons */}
+      <div className="flex gap-3">
+        <button
+          onClick={() => depositToEvent(event.id)}
+          className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 font-bold shadow-lg border-2 border-green-400 text-sm"
+          style={{
+            textShadow: '-1px 1px 0 #000000'
+          }}
+        >
+          DEPOSIT
+        </button>
+        <button
+          onClick={() => console.log('View details for event:', event.id)}
+          className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 font-bold shadow-lg border-2 border-blue-400 text-sm"
+          style={{
+            textShadow: '-1px 1px 0 #000000'
+          }}
+        >
+          VIEW DETAILS
+        </button>
+      </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-yellow-400 p-6">
+    <div className="min-h-screen bg-yellow-200 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 text-center">
