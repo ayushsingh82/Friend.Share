@@ -80,6 +80,26 @@ function getRecipientDetails(uint256 groupId, address recipientAddress)
 ```
 Returns payment status for a specific recipient.
 
+**getAllGroups**
+```solidity
+function getAllGroups(uint256 offset, uint256 limit) 
+    external 
+    view 
+    returns (
+        string[] memory names,
+        string[] memory descriptions,
+        uint256[] memory totalAmounts,
+        uint256[] memory totalRecipients,
+        uint256[] memory paidRecipients,
+        uint256[] memory totalPaidAmounts,
+        uint256[] memory createdAts,
+        address[] memory creators,
+        bool[] memory isActives,
+        uint256 totalCount
+    )
+```
+Returns all groups with complete details including names, descriptions, recipients, amounts, and status.
+
 #### Data Structures:
 
 **Recipient**
@@ -138,11 +158,11 @@ Creates a new event with specified wallet address and expiration time.
 
 **depositToEvent**
 ```solidity
-function depositToEvent(uint256 eventId, string memory description) 
+function depositToEvent(uint256 eventId, uint256 amount) 
     external 
     payable
 ```
-Allows users to deposit funds to an active event.
+Allows users to deposit a specific amount to an active event. The sent value must match the specified amount.
 
 **withdrawFromEvent**
 ```solidity
@@ -183,6 +203,26 @@ function getEventPayments(uint256 eventId)
     )
 ```
 Returns all payment details for an event.
+
+**getAllEvents**
+```solidity
+function getAllEvents(uint256 offset, uint256 limit) 
+    external 
+    view 
+    returns (
+        string[] memory names,
+        string[] memory descriptions,
+        address[] memory walletAddresses,
+        uint256[] memory activeUntils,
+        uint256[] memory createdAts,
+        address[] memory creators,
+        uint256[] memory balances,
+        bool[] memory isActives,
+        uint256[] memory totalContributors,
+        uint256 totalCount
+    )
+```
+Returns all events with complete details including names, descriptions, wallet addresses, expiry dates, and status.
 
 #### Data Structures:
 
@@ -321,7 +361,7 @@ const eventId = await eventContract.createEvent(
 ### Depositing to an Event
 ```javascript
 // Frontend call
-await eventContract.depositToEvent(eventId, "Party contribution", {
+await eventContract.depositToEvent(eventId, ethers.utils.parseEther("0.05"), {
     value: ethers.utils.parseEther("0.05")
 });
 ```

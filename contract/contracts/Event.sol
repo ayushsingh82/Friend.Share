@@ -138,41 +138,42 @@ contract Event is ReentrancyGuard, Ownable {
     /**
      * @dev Deposit amount to an event
      * @param eventId ID of the event
-     * @param description Description for the payment
+     * @param amount Amount to deposit
      */
-    function depositToEvent(uint256 eventId, string memory description) 
+    function depositToEvent(uint256 eventId, uint256 amount) 
         external 
         payable 
         nonReentrant 
         eventExists(eventId) 
         eventIsActive(eventId) 
     {
-        require(msg.value > 0, "Deposit amount must be greater than 0");
+        require(amount > 0, "Deposit amount must be greater than 0");
+        require(msg.value == amount, "Sent value must match specified amount");
 
         EventDetails storage eventData = events[eventId];
 
         // Create payment record
         Payment memory newPayment = Payment({
             payer: msg.sender,
-            amount: msg.value,
+            amount: amount,
             timestamp: block.timestamp,
-            description: description
+            description: "Event deposit"
         });
 
         eventData.payments.push(newPayment);
-        eventData.balance += msg.value;
+        eventData.balance += amount;
 
         // Track user contributions
         if (eventData.totalPaidByUser[msg.sender] == 0) {
             eventData.contributors.push(msg.sender);
             userContributions[msg.sender].push(eventId);
         }
-        eventData.totalPaidByUser[msg.sender] += msg.value;
+        eventData.totalPaidByUser[msg.sender] += amount;
 
         // Transfer funds to event wallet
-        eventData.walletAddress.transfer(msg.value);
+        eventData.walletAddress.transfer(amount);
 
-        emit DepositReceived(eventId, msg.sender, msg.value, description, block.timestamp);
+        emit DepositReceived(eventId, msg.sender, amount, "Event deposit", block.timestamp);
     }
 
     /**
@@ -352,16 +353,35 @@ contract Event is ReentrancyGuard, Ownable {
     }
 
     /**
-     * @dev Get all events (paginated)
+     * @dev Get all events with complete details (paginated)
      * @param offset Starting index
      * @param limit Number of events to return
-     * @return eventIds Array of event IDs
+     * @return names Array of event names
+     * @return descriptions Array of event descriptions
+     * @return walletAddresses Array of wallet addresses
+     * @return activeUntils Array of active until timestamps
+     * @return createdAts Array of creation timestamps
+     * @return creators Array of creator addresses
+     * @return balances Array of current balances
+     * @return isActives Array of active status
+     * @return totalContributors Array of contributor counts
      * @return totalCount Total number of events
      */
     function getAllEvents(uint256 offset, uint256 limit) 
         external 
         view 
-        returns (uint256[] memory eventIds, uint256 totalCount) 
+        returns (
+            string[] memory names,
+            string[] memory descriptions,
+            address[] memory walletAddresses,
+            uint256[] memory activeUntils,
+            uint256[] memory createdAts,
+            address[] memory creators,
+            uint256[] memory balances,
+            bool[] memory isActives,
+            uint256[] memory totalContributors,
+            uint256 totalCount
+        ) 
     {
         uint256 totalEvents = _eventIdCounter.current();
         require(offset < totalEvents, "Offset out of bounds");
@@ -372,13 +392,34 @@ contract Event is ReentrancyGuard, Ownable {
         }
 
         uint256 resultCount = endIndex - offset;
-        eventIds = new uint256[](resultCount);
+        
+        names = new string[](resultCount);
+        descriptions = new string[](resultCount);
+        walletAddresses = new address[](resultCount);
+        activeUntils = new uint256[](resultCount);
+        createdAts = new uint256[](resultCount);
+        creators = new address[](resultCount);
+        balances = new uint256[](resultCount);
+        isActives = new bool[](resultCount);
+        totalContributors = new uint256[](resultCount);
 
         for (uint256 i = 0; i < resultCount; i++) {
-            eventIds[i] = offset + i;
+            uint256 eventId = offset + i;
+            EventDetails storage eventData = events[eventId];
+            bool isStillActive = eventData.isActive && block.timestamp <= eventData.activeUntil;
+            
+            names[i] = eventData.name;
+            descriptions[i] = eventData.description;
+            walletAddresses[i] = eventData.walletAddress;
+            activeUntils[i] = eventData.activeUntil;
+            createdAts[i] = eventData.createdAt;
+            creators[i] = eventData.creator;
+            balances[i] = eventData.balance;
+            isActives[i] = isStillActive;
+            totalContributors[i] = eventData.contributors.length;
         }
 
-        return (eventIds, totalEvents);
+        return (names, descriptions, walletAddresses, activeUntils, createdAts, creators, balances, isActives, totalContributors, totalEvents);
     }
 
     /**

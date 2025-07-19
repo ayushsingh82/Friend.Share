@@ -294,16 +294,35 @@ contract Group is ReentrancyGuard, Ownable {
     }
 
     /**
-     * @dev Get all groups (paginated)
+     * @dev Get all groups with complete details (paginated)
      * @param offset Starting index
      * @param limit Number of groups to return
-     * @return groupIds Array of group IDs
+     * @return names Array of group names
+     * @return descriptions Array of group descriptions
+     * @return totalAmounts Array of total amounts
+     * @return totalRecipients Array of total recipients count
+     * @return paidRecipients Array of paid recipients count
+     * @return totalPaidAmounts Array of total paid amounts
+     * @return createdAts Array of creation timestamps
+     * @return creators Array of creator addresses
+     * @return isActives Array of active status
      * @return totalCount Total number of groups
      */
     function getAllGroups(uint256 offset, uint256 limit) 
         external 
         view 
-        returns (uint256[] memory groupIds, uint256 totalCount) 
+        returns (
+            string[] memory names,
+            string[] memory descriptions,
+            uint256[] memory totalAmounts,
+            uint256[] memory totalRecipients,
+            uint256[] memory paidRecipients,
+            uint256[] memory totalPaidAmounts,
+            uint256[] memory createdAts,
+            address[] memory creators,
+            bool[] memory isActives,
+            uint256 totalCount
+        ) 
     {
         uint256 totalGroups = _groupIdCounter.current();
         require(offset < totalGroups, "Offset out of bounds");
@@ -314,13 +333,33 @@ contract Group is ReentrancyGuard, Ownable {
         }
 
         uint256 resultCount = endIndex - offset;
-        groupIds = new uint256[](resultCount);
+        
+        names = new string[](resultCount);
+        descriptions = new string[](resultCount);
+        totalAmounts = new uint256[](resultCount);
+        totalRecipients = new uint256[](resultCount);
+        paidRecipients = new uint256[](resultCount);
+        totalPaidAmounts = new uint256[](resultCount);
+        createdAts = new uint256[](resultCount);
+        creators = new address[](resultCount);
+        isActives = new bool[](resultCount);
 
         for (uint256 i = 0; i < resultCount; i++) {
-            groupIds[i] = offset + i;
+            uint256 groupId = offset + i;
+            GroupDetails storage group = groups[groupId];
+            
+            names[i] = group.name;
+            descriptions[i] = group.description;
+            totalAmounts[i] = group.totalAmount;
+            totalRecipients[i] = group.totalRecipients;
+            paidRecipients[i] = group.paidRecipients;
+            totalPaidAmounts[i] = group.totalPaidAmount;
+            createdAts[i] = group.createdAt;
+            creators[i] = group.creator;
+            isActives[i] = group.isActive;
         }
 
-        return (groupIds, totalGroups);
+        return (names, descriptions, totalAmounts, totalRecipients, paidRecipients, totalPaidAmounts, createdAts, creators, isActives, totalGroups);
     }
 
     /**

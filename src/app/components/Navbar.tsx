@@ -1,11 +1,16 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useAccount, useBalance } from 'wagmi';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { address, isConnected } = useAccount();
+  const { data: balance } = useBalance({
+    address: address,
+  });
 
   return (
     <nav className="bg-blue-600 p-4 shadow-lg">
@@ -33,8 +38,54 @@ const Navbar = () => {
           </Link>
         </div>
       
-        {/* Right: Empty space for balance */}
-        <div className="flex-1"></div>
+        {/* Right: ConnectButton with Custom Styling */}
+        <div className="flex-1 flex justify-end">
+          <div className="relative z-[9999]">
+            <ConnectButton.Custom>
+              {({
+                account,
+                chain,
+                openAccountModal,
+                openChainModal,
+                openConnectModal,
+                mounted,
+              }) => {
+                const ready = mounted;
+                const connected = ready && account && chain;
+
+                return (
+                  <div className="flex items-center space-x-4">
+                    {connected ? (
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-white border-2 border-blue-300 rounded-lg px-4 py-2 flex items-center space-x-3 shadow-lg">
+                          <span className="text-sm font-semibold text-gray-700">
+                            {account.address.slice(0, 6)}...{account.address.slice(-4)}
+                          </span>
+                          <span className="text-blue-600 font-bold">
+                            {balance ? `${parseFloat(balance.formatted).toFixed(4)} ${balance.symbol}` : '0.0000 ETH'}
+                          </span>
+                        </div>
+                        <button
+                          onClick={openAccountModal}
+                          className="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold border-2 border-black shadow-lg text-sm"
+                        >
+                          Disconnect
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={openConnectModal}
+                        className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors font-bold border-2 border-black shadow-lg"
+                      >
+                        Connect Wallet
+                      </button>
+                    )}
+                  </div>
+                );
+              }}
+            </ConnectButton.Custom>
+          </div>
+        </div>
       </div>
     </nav>
   );
