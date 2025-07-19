@@ -102,7 +102,19 @@ const GroupPage = () => {
         abi: groupAbi,
         functionName: 'getAllGroups',
       });
-      setGroups(groupsData as any[]);
+      
+      // The new ABI returns separate arrays: [names, descriptions, totalAmounts, allRecipients]
+      const [names, descriptions, totalAmounts, allRecipients] = groupsData as [string[], string[], bigint[], string[][]];
+      
+      // Combine the arrays into objects
+      const combinedGroups = names.map((name, index) => ({
+        name,
+        description: descriptions[index],
+        totalAmount: totalAmounts[index],
+        recipients: allRecipients[index] || []
+      }));
+      
+      setGroups(combinedGroups);
     } catch (err) {
       console.error('Error fetching groups:', err);
     }
@@ -120,16 +132,18 @@ const GroupPage = () => {
       setSuccess('');
 
       try {
-        // Prepare recipient addresses and amounts
+        // Prepare recipient addresses
         const recipientAddresses = recipients.map(r => r.address as `0x${string}`);
-        const recipientAmounts = recipients.map(r => BigInt(Math.floor(r.amount * 1e18))); // Convert to wei
+        
+        // Calculate total amount in wei
+        const totalAmountWei = BigInt(Math.floor(parseFloat(sharedAmount) * 1e18));
 
         // Simulate the contract call
         const { request } = await publicClient.simulateContract({
           address: GROUP_CONTRACT_ADDRESS as `0x${string}`,
           abi: groupAbi,
           functionName: 'createGroup',
-          args: [groupName, sharedDescription, recipientAddresses, recipientAmounts],
+          args: [groupName, sharedDescription, totalAmountWei, recipientAddresses],
           account: address,
         });
 
@@ -454,8 +468,8 @@ const GroupPage = () => {
                   id: index.toString(),
                   name: group.name,
                   description: group.description,
-                  totalRecipients: 0, // You can fetch this separately if needed
-                  createdDate: new Date(Number(group.createdAt) * 1000),
+                  totalRecipients: group.recipients?.length || 0,
+                  createdDate: new Date(), // Since createdAt is not in the new ABI
                   totalAmount: Number(group.totalAmount) / 1e18
                 })}
               </div>
