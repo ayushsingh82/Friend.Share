@@ -1,6 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAccount } from 'wagmi';
+import { publicClient, walletClient } from '../config';
+import { EVENT_CONTRACT_ADDRESS } from '../address';
+import eventAbi from '../eventabi.json';
 
 interface Event {
   id: string;
@@ -14,11 +18,15 @@ interface Event {
 }
 
 const EventsPage = () => {
+  const { address } = useAccount();
   const [events, setEvents] = useState<Event[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showDepositModal, setShowDepositModal] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState<string>('');
   const [depositAmount, setDepositAmount] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [newEvent, setNewEvent] = useState({
     name: '',
     description: '',
@@ -26,21 +34,80 @@ const EventsPage = () => {
     walletAddress: ''
   });
 
-  const createEvent = () => {
-    if (newEvent.name && newEvent.description && newEvent.activeUntil && newEvent.walletAddress) {
-      const event: Event = {
-        id: Date.now().toString(),
-        name: newEvent.name,
-        description: newEvent.description,
-        activeUntil: new Date(newEvent.activeUntil),
-        walletAddress: newEvent.walletAddress,
-        createdDate: new Date(),
-        endDate: new Date(newEvent.activeUntil),
-        balance: 0
-      };
+  // Fetch all events from contract
+  const fetchEvents = async () => {
+    try {
+      const eventsData = await publicClient.readContract({
+        address: EVENT_CONTRACT_ADDRESS as `0x${string}`,
+        abi: eventAbi,
+        functionName: 'getAllEvents',
+      });
       
-      setEvents([...events, event]);
-      setNewEvent({ name: '', description: '', activeUntil: '', walletAddress: '' });
+      console.log('Events data:', eventsData);
+      
+      // The ABI returns separate arrays: [names, descriptions, endDates, walletAddresses, balances]
+      const [names, descriptions, endDates, walletAddresses, balances] = eventsData as [string[], string[], bigint[], string[], bigint[]];
+      
+      // Combine the arrays into objects
+      const combinedEvents = names.map((name, index) => ({
+        id: index.toString(),
+        name,
+        description: descriptions[index],
+        activeUntil: new Date(Number(endDates[index]) * 1000),
+        walletAddress: walletAddresses[index],
+        createdDate: new Date(Date.now() - (index * 24 * 60 * 60 * 1000)), // Simulate creation time
+        endDate: new Date(Number(endDates[index]) * 1000),
+        balance: Number(balances[index]) / 1e18
+      }));
+      
+      setEvents(combinedEvents);
+    } catch (err) {
+      console.error('Error fetching events:', err);
+    }
+  };
+
+  // Load events on component mount
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const createEvent = async () => {
+    if (newEvent.name && newEvent.description && newEvent.activeUntil && newEvent.walletAddress) {
+      setLoading(true);
+      setError('');
+      setSuccess('');
+
+      try {
+        // Convert date to timestamp
+        const endDateTimestamp = BigInt(Math.floor(new Date(newEvent.activeUntil).getTime() / 1000));
+
+        // Simulate the contract call
+        const { request } = await publicClient.simulateContract({
+          address: EVENT_CONTRACT_ADDRESS as `0x${string}`,
+          abi: eventAbi,
+          functionName: 'createEvent',
+          args: [newEvent.name, newEvent.description, endDateTimestamp, newEvent.walletAddress as `0x${string}`],
+          account: address,
+        });
+
+        // Write to the contract
+        const hash = await walletClient.writeContract(request);
+        await publicClient.waitForTransactionReceipt({ hash });
+
+        setSuccess('Event created successfully!');
+        setNewEvent({ name: '', description: '', activeUntil: '', walletAddress: '' });
+        setShowCreateForm(false);
+        
+        // Refresh events list
+        setTimeout(() => {
+          fetchEvents();
+        }, 2000);
+      } catch (err) {
+        console.error('Error creating event:', err);
+        setError('Failed to create event. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -55,13 +122,45 @@ const EventsPage = () => {
     setDepositAmount('');
   };
 
-  const handleDeposit = () => {
+  const handleDeposit = async () => {
     if (depositAmount && parseFloat(depositAmount) > 0) {
-      // Handle deposit logic here
-      console.log('Depositing to event:', selectedEventId, 'Amount:', depositAmount);
-      setShowDepositModal(false);
-      setDepositAmount('');
-      setSelectedEventId('');
+      setLoading(true);
+      setError('');
+      setSuccess('');
+
+      try {
+        // Convert amount to wei
+        const amountWei = BigInt(Math.floor(parseFloat(depositAmount) * 1e18));
+
+        // Simulate the contract call
+        const { request } = await publicClient.simulateContract({
+          address: EVENT_CONTRACT_ADDRESS as `0x${string}`,
+          abi: eventAbi,
+          functionName: 'depositToEvent',
+          args: [BigInt(selectedEventId)],
+          account: address,
+          value: amountWei,
+        });
+
+        // Write to the contract
+        const hash = await walletClient.writeContract(request);
+        await publicClient.waitForTransactionReceipt({ hash });
+
+        setSuccess('Deposit successful!');
+        setShowDepositModal(false);
+        setDepositAmount('');
+        setSelectedEventId('');
+        
+        // Refresh events list
+        setTimeout(() => {
+          fetchEvents();
+        }, 2000);
+      } catch (err) {
+        console.error('Error depositing to event:', err);
+        setError('Failed to deposit. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -186,6 +285,10 @@ const EventsPage = () => {
               Fill in the event details to create your new event
             </p>
 
+            {/* Error and Success Messages */}
+            {error && <p className="text-red-500 text-sm font-medium mb-4">{error}</p>}
+            {success && <p className="text-green-500 text-sm font-medium mb-4">{success}</p>}
+
             <div className="space-y-4">
               {/* Event Name */}
               <div>
@@ -246,17 +349,17 @@ const EventsPage = () => {
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={createEvent}
-                  disabled={!newEvent.name || !newEvent.description || !newEvent.activeUntil || !newEvent.walletAddress}
+                  disabled={!newEvent.name || !newEvent.description || !newEvent.activeUntil || !newEvent.walletAddress || loading}
                   className={`flex-1 px-4 py-3 text-white rounded-lg transition-all transform hover:scale-105 font-bold shadow-lg ${
-                    newEvent.name && newEvent.description && newEvent.activeUntil && newEvent.walletAddress
+                    newEvent.name && newEvent.description && newEvent.activeUntil && newEvent.walletAddress && !loading
                       ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800'
                       : 'bg-gray-400 cursor-not-allowed'
                   }`}
                   style={{
-                    textShadow: newEvent.name && newEvent.description && newEvent.activeUntil && newEvent.walletAddress ? '-1px 1px 0 #000000' : 'none'
+                    textShadow: newEvent.name && newEvent.description && newEvent.activeUntil && newEvent.walletAddress && !loading ? '-1px 1px 0 #000000' : 'none'
                   }}
                 >
-                  CREATE EVENT
+                  {loading ? 'CREATING...' : 'CREATE EVENT'}
                 </button>
                 <button
                   onClick={() => setShowCreateForm(false)}
@@ -290,6 +393,10 @@ const EventsPage = () => {
                 Enter the amount you want to deposit to this event
               </p>
 
+              {/* Error and Success Messages */}
+              {error && <p className="text-red-500 text-sm font-medium mb-4">{error}</p>}
+              {success && <p className="text-green-500 text-sm font-medium mb-4">{success}</p>}
+
               <div className="space-y-4">
                 {/* Amount Input */}
                 <div>
@@ -310,17 +417,17 @@ const EventsPage = () => {
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={handleDeposit}
-                    disabled={!depositAmount || parseFloat(depositAmount) <= 0}
+                    disabled={!depositAmount || parseFloat(depositAmount) <= 0 || loading}
                     className={`flex-1 px-4 py-3 text-white rounded-lg transition-all transform hover:scale-105 font-bold shadow-lg ${
-                      depositAmount && parseFloat(depositAmount) > 0
+                      depositAmount && parseFloat(depositAmount) > 0 && !loading
                         ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'
                         : 'bg-gray-400 cursor-not-allowed'
                     }`}
                     style={{
-                      textShadow: depositAmount && parseFloat(depositAmount) > 0 ? '-1px 1px 0 #000000' : 'none'
+                      textShadow: depositAmount && parseFloat(depositAmount) > 0 && !loading ? '-1px 1px 0 #000000' : 'none'
                     }}
                   >
-                    DEPOSIT
+                    {loading ? 'DEPOSITING...' : 'DEPOSIT'}
                   </button>
                   <button
                     onClick={() => setShowDepositModal(false)}
@@ -334,9 +441,21 @@ const EventsPage = () => {
           </div>
         )}
 
-        {/* Single Event Display */}
-        <div className="flex justify-center">
-          {renderEventCard(sampleEvent)}
+        {/* Events Display */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {events.length > 0 ? (
+            events.map((event, index) => (
+              <div key={index}>
+                {renderEventCard(event)}
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-800 text-xl font-medium">
+                No events created yet. Create your first event!
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

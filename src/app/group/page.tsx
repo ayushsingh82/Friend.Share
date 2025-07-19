@@ -109,6 +109,8 @@ const GroupPage = () => {
       const [names, descriptions, totalAmounts, allRecipients] = groupsData as [string[], string[], bigint[], string[][]];
       
       console.log('Groups data:', { names, descriptions, totalAmounts, allRecipients });
+      console.log('Total amounts (raw):', totalAmounts);
+      console.log('Total amounts (converted):', totalAmounts.map(amount => Number(amount) / 1e18));
       
       // Get group count to fetch individual group details
       const groupCount = await publicClient.readContract({
@@ -119,21 +121,27 @@ const GroupPage = () => {
       
       console.log('Total groups:', Number(groupCount));
       
-      // For now, since the contract doesn't return creator info, we'll use a placeholder
-      // In a real implementation, you'd need to add a mapping in the contract to store creators
+      // Try to get creator information from contract events or use current user
+      // Note: This is a limitation of the current contract - it doesn't store creator info
       const creators: string[] = [];
       for (let i = 0; i < Number(groupCount); i++) {
-        // Use current user's address as creator for now, or show "Contract Creator"
-        creators.push(address || 'Contract Creator');
+        // For now, we'll show the current user as creator if they're connected
+        // In a proper implementation, the contract should store creator addresses
+        if (address) {
+          creators.push(address);
+        } else {
+          creators.push('Unknown Creator');
+        }
       }
       
       // Combine the arrays into objects
       const combinedGroups = names.map((name, index) => ({
         name,
         description: descriptions[index],
-        totalAmount: totalAmounts[index],
+        totalAmount: Number(totalAmounts[index]) / 1e18, // Convert to BNB here
         recipients: allRecipients[index] || [],
-        creator: creators[index] || 'Unknown'
+        creator: creators[index] || 'Unknown',
+        groupIndex: index
       }));
       
       setGroups(combinedGroups);
@@ -164,11 +172,15 @@ const GroupPage = () => {
       
       // Combine with the group data we already have
       const group = groups[groupIndex];
+      console.log('Group details from contract:', groupDetails);
+      console.log('Raw total amount:', groupDetails[2]);
+      console.log('Converted total amount:', Number(groupDetails[2]) / 1e18);
+      
       const detailedGroup = {
         ...group,
         name: groupDetails[0],
         description: groupDetails[1],
-        totalAmount: Number(groupDetails[2]) / 1e18,
+        totalAmount: Number(groupDetails[2]) / 1e18, // Convert to BNB
         recipients: groupDetails[3] || []
       };
       
@@ -216,8 +228,10 @@ const GroupPage = () => {
         setFormRecipientInputs([{ id: 1, address: '' }]);
         setShowCreateForm(false);
         
-        // Refresh groups list
-        fetchGroups();
+        // Refresh groups list with the new group
+        setTimeout(() => {
+          fetchGroups();
+        }, 2000); // Wait a bit for the transaction to be processed
       } catch (err) {
         console.error('Error creating group:', err);
         setError('Failed to create group. Please try again.');
@@ -279,16 +293,6 @@ const GroupPage = () => {
 
   const renderGroupCard = (group: any, groupIndex: number) => (
     <div className="bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 rounded-2xl shadow-2xl p-6 border-t-2 border-l-2 border-r border-b-8 border-t-blue-200 border-l-blue-200 border-r-blue-200 border-b-black max-w-md mx-auto">
-      {/* Owner Information */}
-      <div className="mb-3 p-2 bg-blue-100 rounded-lg border border-blue-300">
-        <p className="text-xs font-bold text-blue-700 uppercase tracking-wide">
-          Owner: {group.creator && group.creator !== 'Contract Creator' && group.creator.startsWith('0x')
-            ? `${group.creator.slice(0, 6)}...${group.creator.slice(-4)}`
-            : group.creator || 'Unknown'
-          }
-        </p>
-      </div>
-
       {/* Group Header */}
       <div className="mb-4">
         <h3 className="text-2xl font-black text-blue-900 mb-2" style={{
@@ -309,7 +313,7 @@ const GroupPage = () => {
 
       {/* Created Date - Small */}
       <div className="text-xs text-black mb-4 text-center">
-        Created: {group.createdDate.toLocaleDateString()} at {group.createdDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+        Group #{group.groupIndex + 1} • Created recently
       </div>
 
       {/* View Details Button */}
@@ -430,7 +434,7 @@ const GroupPage = () => {
               {/* Shared Amount */}
               <div>
                 <label className="block text-sm font-bold text-green-700 mb-2 uppercase tracking-wide">
-                  Amount (ETH) *
+                  Amount (BNB) *
                 </label>
                 <input
                   type="number"
@@ -536,9 +540,10 @@ const GroupPage = () => {
                   name: group.name,
                   description: group.description,
                   totalRecipients: group.recipients?.length || 0,
-                  createdDate: new Date(), // Since createdAt is not in the new ABI
-                  totalAmount: Number(group.totalAmount) / 1e18,
-                  creator: group.creator
+                  createdDate: new Date(Date.now() - (index * 24 * 60 * 60 * 1000)), // Simulate creation time based on index
+                  totalAmount: group.totalAmount,
+                  creator: group.creator,
+                  groupIndex: group.groupIndex
                 }, index)}
               </div>
             ))
@@ -569,13 +574,29 @@ const GroupPage = () => {
                 </button>
               </div>
 
-              {/* Group Info */}
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-blue-900 mb-2">{selectedGroup.name}</h3>
-                <p className="text-gray-700 mb-3">{selectedGroup.description}</p>
-                <div className="flex justify-between items-center p-3 bg-blue-100 rounded-lg">
-                  <span className="text-sm font-bold text-blue-700">Total Amount:</span>
-                  <span className="text-lg font-bold text-blue-900">{selectedGroup.totalAmount} ETH</span>
+              {/* Owner Information */}
+              <div className="mb-4 p-3 bg-blue-100 rounded-lg border border-blue-300">
+                <p className="text-sm font-bold text-blue-700 uppercase tracking-wide">
+                  Owner: {selectedGroup.creator && selectedGroup.creator.startsWith('0x')
+                    ? `${selectedGroup.creator.slice(0, 6)}...${selectedGroup.creator.slice(-4)}`
+                    : selectedGroup.creator || 'Unknown Creator'
+                  }
+                </p>
+              </div>
+
+              {/* Total Amount */}
+              <div className="mb-4 p-3 bg-green-100 rounded-lg border border-green-300">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-bold text-green-700 uppercase tracking-wide">Total Amount:</span>
+                  <span className="text-lg font-bold text-green-900">
+                    {selectedGroup.totalAmount && selectedGroup.totalAmount > 0
+                      ? (typeof selectedGroup.totalAmount === 'number' 
+                          ? selectedGroup.totalAmount.toFixed(2) 
+                          : Number(selectedGroup.totalAmount).toFixed(2)
+                        )
+                      : '0.00'
+                    } BNB
+                  </span>
                 </div>
               </div>
 
@@ -586,14 +607,9 @@ const GroupPage = () => {
                   <div className="space-y-2">
                     {selectedGroup.recipients.map((recipient: string, index: number) => (
                       <div key={index} className="p-3 bg-white border-2 border-green-200 rounded-lg">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm font-semibold text-gray-700">
-                            Recipient {index + 1}:
-                          </span>
-                          <span className="text-sm font-mono text-green-700 bg-green-100 px-2 py-1 rounded">
-                            {recipient}
-                          </span>
-                        </div>
+                        <span className="text-sm font-mono text-green-700 bg-green-100 px-2 py-1 rounded">
+                          {recipient}
+                        </span>
                       </div>
                     ))}
                   </div>
