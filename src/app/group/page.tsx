@@ -1,6 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAccount } from 'wagmi';
+import { publicClient, walletClient } from '../config';
+import { GROUP_CONTRACT_ADDRESS } from '../address';
+import groupAbi from '../groupabi.json';
 
 interface Recipient {
   id: string;
@@ -18,6 +22,7 @@ interface GroupDetails {
 }
 
 const GroupPage = () => {
+  const { address } = useAccount();
   const [recipients, setRecipients] = useState<Recipient[]>([]);
   const [recipientInputs, setRecipientInputs] = useState([
     { id: 1, address: '' }
@@ -29,6 +34,10 @@ const GroupPage = () => {
   const [formRecipientInputs, setFormRecipientInputs] = useState([
     { id: 1, address: '' }
   ]);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   // Mock group details - in real app this would come from props or API
   const [groupDetails] = useState<GroupDetails>({
@@ -85,14 +94,65 @@ const GroupPage = () => {
 
   const totalAmount = recipients.reduce((sum, recipient) => sum + recipient.amount, 0);
 
-  const createGroup = () => {
-    if (groupName && sharedDescription && sharedAmount) {
-      console.log('Group created:', { groupName, sharedDescription, sharedAmount });
-      setGroupName('');
-      setSharedDescription('');
-      setSharedAmount('');
-      setFormRecipientInputs([{ id: 1, address: '' }]);
-      setShowCreateForm(false);
+  // Fetch all groups from contract
+  const fetchGroups = async () => {
+    try {
+      const groupsData = await publicClient.readContract({
+        address: GROUP_CONTRACT_ADDRESS as `0x${string}`,
+        abi: groupAbi,
+        functionName: 'getAllGroups',
+      });
+      setGroups(groupsData as any[]);
+    } catch (err) {
+      console.error('Error fetching groups:', err);
+    }
+  };
+
+  // Load groups on component mount
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  const createGroup = async () => {
+    if (groupName && sharedDescription && sharedAmount && recipients.length > 0) {
+      setLoading(true);
+      setError('');
+      setSuccess('');
+
+      try {
+        // Prepare recipient addresses and amounts
+        const recipientAddresses = recipients.map(r => r.address as `0x${string}`);
+        const recipientAmounts = recipients.map(r => BigInt(Math.floor(r.amount * 1e18))); // Convert to wei
+
+        // Simulate the contract call
+        const { request } = await publicClient.simulateContract({
+          address: GROUP_CONTRACT_ADDRESS as `0x${string}`,
+          abi: groupAbi,
+          functionName: 'createGroup',
+          args: [groupName, sharedDescription, recipientAddresses, recipientAmounts],
+          account: address,
+        });
+
+        // Write to the contract
+        const hash = await walletClient.writeContract(request);
+        await publicClient.waitForTransactionReceipt({ hash });
+
+        setSuccess('Group created successfully!');
+        setGroupName('');
+        setSharedDescription('');
+        setSharedAmount('');
+        setRecipients([]);
+        setFormRecipientInputs([{ id: 1, address: '' }]);
+        setShowCreateForm(false);
+        
+        // Refresh groups list
+        fetchGroups();
+      } catch (err) {
+        console.error('Error creating group:', err);
+        setError('Failed to create group. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -354,21 +414,25 @@ const GroupPage = () => {
                 </button>
               </div>
 
+              {/* Error and Success Messages */}
+              {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
+              {success && <p className="text-green-500 text-sm font-medium">{success}</p>}
+
               {/* Action Buttons */}
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={createGroup}
-                  disabled={!groupName || !sharedDescription || !sharedAmount}
+                  disabled={!groupName || !sharedDescription || !sharedAmount || recipients.length === 0 || loading}
                   className={`flex-1 px-4 py-3 text-white rounded-lg transition-all transform hover:scale-105 font-bold shadow-lg ${
-                    groupName && sharedDescription && sharedAmount
+                    groupName && sharedDescription && sharedAmount && recipients.length > 0 && !loading
                       ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800'
                       : 'bg-gray-400 cursor-not-allowed'
                   }`}
                   style={{
-                    textShadow: groupName && sharedDescription && sharedAmount ? '-1px 1px 0 #000000' : 'none'
+                    textShadow: groupName && sharedDescription && sharedAmount && recipients.length > 0 && !loading ? '-1px 1px 0 #000000' : 'none'
                   }}
                 >
-                  CREATE GROUP
+                  {loading ? 'CREATING...' : 'CREATE GROUP'}
                 </button>
                 <button
                   onClick={() => setShowCreateForm(false)}
@@ -381,9 +445,28 @@ const GroupPage = () => {
           </div>
         )}
 
-        {/* Single Group Display */}
-        <div className="flex justify-center">
-          {renderGroupCard(sampleGroup)}
+        {/* Groups Display */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {groups.length > 0 ? (
+            groups.map((group, index) => (
+              <div key={index}>
+                {renderGroupCard({
+                  id: index.toString(),
+                  name: group.name,
+                  description: group.description,
+                  totalRecipients: 0, // You can fetch this separately if needed
+                  createdDate: new Date(Number(group.createdAt) * 1000),
+                  totalAmount: Number(group.totalAmount) / 1e18
+                })}
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-white/80 text-xl font-medium">
+                No groups created yet. Create your first group!
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
