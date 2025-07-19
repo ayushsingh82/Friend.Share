@@ -38,6 +38,8 @@ const GroupPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [selectedGroup, setSelectedGroup] = useState<any>(null);
+  const [showGroupDetails, setShowGroupDetails] = useState(false);
 
   // Mock group details - in real app this would come from props or API
   const [groupDetails] = useState<GroupDetails>({
@@ -106,12 +108,32 @@ const GroupPage = () => {
       // The new ABI returns separate arrays: [names, descriptions, totalAmounts, allRecipients]
       const [names, descriptions, totalAmounts, allRecipients] = groupsData as [string[], string[], bigint[], string[][]];
       
+      console.log('Groups data:', { names, descriptions, totalAmounts, allRecipients });
+      
+      // Get group count to fetch individual group details
+      const groupCount = await publicClient.readContract({
+        address: GROUP_CONTRACT_ADDRESS as `0x${string}`,
+        abi: groupAbi,
+        functionName: 'getGroupCount',
+      }) as bigint;
+      
+      console.log('Total groups:', Number(groupCount));
+      
+      // For now, since the contract doesn't return creator info, we'll use a placeholder
+      // In a real implementation, you'd need to add a mapping in the contract to store creators
+      const creators: string[] = [];
+      for (let i = 0; i < Number(groupCount); i++) {
+        // Use current user's address as creator for now, or show "Contract Creator"
+        creators.push(address || 'Contract Creator');
+      }
+      
       // Combine the arrays into objects
       const combinedGroups = names.map((name, index) => ({
         name,
         description: descriptions[index],
         totalAmount: totalAmounts[index],
-        recipients: allRecipients[index] || []
+        recipients: allRecipients[index] || [],
+        creator: creators[index] || 'Unknown'
       }));
       
       setGroups(combinedGroups);
@@ -124,6 +146,41 @@ const GroupPage = () => {
   useEffect(() => {
     fetchGroups();
   }, []);
+
+  // Function to fetch group details and show modal
+  const viewGroupDetails = async (groupIndex: number) => {
+    try {
+      setLoading(true);
+      
+      // Get group details from contract
+      const groupDetails = await publicClient.readContract({
+        address: GROUP_CONTRACT_ADDRESS as `0x${string}`,
+        abi: groupAbi,
+        functionName: 'getGroupDetailsById',
+        args: [BigInt(groupIndex)]
+      }) as any;
+      
+      console.log('Group details:', groupDetails);
+      
+      // Combine with the group data we already have
+      const group = groups[groupIndex];
+      const detailedGroup = {
+        ...group,
+        name: groupDetails[0],
+        description: groupDetails[1],
+        totalAmount: Number(groupDetails[2]) / 1e18,
+        recipients: groupDetails[3] || []
+      };
+      
+      setSelectedGroup(detailedGroup);
+      setShowGroupDetails(true);
+    } catch (err) {
+      console.error('Error fetching group details:', err);
+      setError('Failed to fetch group details');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const createGroup = async () => {
     if (groupName && sharedDescription && sharedAmount && recipients.length > 0) {
@@ -220,8 +277,18 @@ const GroupPage = () => {
     totalAmount: 2.5
   };
 
-  const renderGroupCard = (group: any) => (
+  const renderGroupCard = (group: any, groupIndex: number) => (
     <div className="bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 rounded-2xl shadow-2xl p-6 border-t-2 border-l-2 border-r border-b-8 border-t-blue-200 border-l-blue-200 border-r-blue-200 border-b-black max-w-md mx-auto">
+      {/* Owner Information */}
+      <div className="mb-3 p-2 bg-blue-100 rounded-lg border border-blue-300">
+        <p className="text-xs font-bold text-blue-700 uppercase tracking-wide">
+          Owner: {group.creator && group.creator !== 'Contract Creator' && group.creator.startsWith('0x')
+            ? `${group.creator.slice(0, 6)}...${group.creator.slice(-4)}`
+            : group.creator || 'Unknown'
+          }
+        </p>
+      </div>
+
       {/* Group Header */}
       <div className="mb-4">
         <h3 className="text-2xl font-black text-blue-900 mb-2" style={{
@@ -247,7 +314,7 @@ const GroupPage = () => {
 
       {/* View Details Button */}
       <button
-        onClick={() => console.log('View details for group:', group.id)}
+        onClick={() => viewGroupDetails(groupIndex)}
         className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 font-bold shadow-lg border-2 border-green-400"
         style={{
           textShadow: '-1px 1px 0 #000000'
@@ -470,8 +537,9 @@ const GroupPage = () => {
                   description: group.description,
                   totalRecipients: group.recipients?.length || 0,
                   createdDate: new Date(), // Since createdAt is not in the new ABI
-                  totalAmount: Number(group.totalAmount) / 1e18
-                })}
+                  totalAmount: Number(group.totalAmount) / 1e18,
+                  creator: group.creator
+                }, index)}
               </div>
             ))
           ) : (
@@ -482,6 +550,70 @@ const GroupPage = () => {
             </div>
           )}
         </div>
+
+        {/* Group Details Modal */}
+        {showGroupDetails && selectedGroup && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 pt-20">
+            <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 backdrop-blur-sm rounded-2xl shadow-2xl p-6 border-2 border-blue-300 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-black text-gray-800" style={{
+                  textShadow: '-1px 1px 0 #e5e7eb'
+                }}>
+                  GROUP DETAILS
+                </h2>
+                <button
+                  onClick={() => setShowGroupDetails(false)}
+                  className="text-gray-500 hover:text-red-600 text-xl font-bold transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Group Info */}
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-blue-900 mb-2">{selectedGroup.name}</h3>
+                <p className="text-gray-700 mb-3">{selectedGroup.description}</p>
+                <div className="flex justify-between items-center p-3 bg-blue-100 rounded-lg">
+                  <span className="text-sm font-bold text-blue-700">Total Amount:</span>
+                  <span className="text-lg font-bold text-blue-900">{selectedGroup.totalAmount} ETH</span>
+                </div>
+              </div>
+
+              {/* Recipients List */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-gray-800 mb-3">Recipients ({selectedGroup.recipients?.length || 0})</h4>
+                {selectedGroup.recipients && selectedGroup.recipients.length > 0 ? (
+                  <div className="space-y-2">
+                    {selectedGroup.recipients.map((recipient: string, index: number) => (
+                      <div key={index} className="p-3 bg-white border-2 border-green-200 rounded-lg">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-semibold text-gray-700">
+                            Recipient {index + 1}:
+                          </span>
+                          <span className="text-sm font-mono text-green-700 bg-green-100 px-2 py-1 rounded">
+                            {recipient}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-4">No recipients found</p>
+                )}
+              </div>
+
+              {/* Close Button */}
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setShowGroupDetails(false)}
+                  className="px-6 py-2 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700 rounded-lg hover:from-gray-300 hover:to-gray-400 transition-all transform hover:scale-105 font-bold shadow-lg"
+                >
+                  CLOSE
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
