@@ -45,19 +45,19 @@ const EventsPage = () => {
       
       console.log('Events data:', eventsData);
       
-      // The ABI returns separate arrays: [names, descriptions, endDates, walletAddresses, balances]
-      const [names, descriptions, endDates, walletAddresses, balances] = eventsData as [string[], string[], bigint[], string[], bigint[]];
+      // The new ABI returns a struct array: Event[]
+      const allEvents = eventsData as any[];
       
-      // Combine the arrays into objects
-      const combinedEvents = names.map((name, index) => ({
+      // Convert struct array to event objects
+      const combinedEvents = allEvents.map((event, index) => ({
         id: index.toString(),
-        name,
-        description: descriptions[index],
-        activeUntil: new Date(Number(endDates[index]) * 1000),
-        walletAddress: walletAddresses[index],
+        name: event.name,
+        description: event.description,
+        activeUntil: new Date(Date.now() + (index * 24 * 60 * 60 * 1000)), // Simulate end date
+        walletAddress: event.owner,
         createdDate: new Date(Date.now() - (index * 24 * 60 * 60 * 1000)), // Simulate creation time
-        endDate: new Date(Number(endDates[index]) * 1000),
-        balance: Number(balances[index]) / 1e18
+        endDate: new Date(Date.now() + (index * 24 * 60 * 60 * 1000)), // Simulate end date
+        balance: 0 // Since balance is not in the new ABI
       }));
       
       setEvents(combinedEvents);
@@ -72,21 +72,18 @@ const EventsPage = () => {
   }, []);
 
   const createEvent = async () => {
-    if (newEvent.name && newEvent.description && newEvent.activeUntil && newEvent.walletAddress) {
+    if (newEvent.name && newEvent.description && newEvent.walletAddress) {
       setLoading(true);
       setError('');
       setSuccess('');
 
       try {
-        // Convert date to timestamp
-        const endDateTimestamp = BigInt(Math.floor(new Date(newEvent.activeUntil).getTime() / 1000));
-
         // Simulate the contract call
         const { request } = await publicClient.simulateContract({
           address: EVENT_CONTRACT_ADDRESS as `0x${string}`,
           abi: eventAbi,
           functionName: 'createEvent',
-          args: [newEvent.name, newEvent.description, endDateTimestamp, newEvent.walletAddress as `0x${string}`],
+          args: [newEvent.name, newEvent.description, newEvent.walletAddress as `0x${string}`],
           account: address,
         });
 
@@ -124,43 +121,10 @@ const EventsPage = () => {
 
   const handleDeposit = async () => {
     if (depositAmount && parseFloat(depositAmount) > 0) {
-      setLoading(true);
-      setError('');
-      setSuccess('');
-
-      try {
-        // Convert amount to wei
-        const amountWei = BigInt(Math.floor(parseFloat(depositAmount) * 1e18));
-
-        // Simulate the contract call
-        const { request } = await publicClient.simulateContract({
-          address: EVENT_CONTRACT_ADDRESS as `0x${string}`,
-          abi: eventAbi,
-          functionName: 'depositToEvent',
-          args: [BigInt(selectedEventId)],
-          account: address,
-          value: amountWei,
-        });
-
-        // Write to the contract
-        const hash = await walletClient.writeContract(request);
-        await publicClient.waitForTransactionReceipt({ hash });
-
-        setSuccess('Deposit successful!');
-        setShowDepositModal(false);
-        setDepositAmount('');
-        setSelectedEventId('');
-        
-        // Refresh events list
-        setTimeout(() => {
-          fetchEvents();
-        }, 2000);
-      } catch (err) {
-        console.error('Error depositing to event:', err);
-        setError('Failed to deposit. Please try again.');
-      } finally {
-        setLoading(false);
-      }
+      setError('Deposit functionality not available in current contract');
+      setShowDepositModal(false);
+      setDepositAmount('');
+      setSelectedEventId('');
     }
   };
 
@@ -206,17 +170,8 @@ const EventsPage = () => {
       {/* Action Buttons */}
       <div className="flex gap-3">
         <button
-          onClick={() => openDepositModal(event.id)}
-          className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 font-bold shadow-lg border-2 border-green-400 text-sm"
-          style={{
-            textShadow: '-1px 1px 0 #000000'
-          }}
-        >
-          DEPOSIT
-        </button>
-        <button
           onClick={() => console.log('View details for event:', event.id)}
-          className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 font-bold shadow-lg border-2 border-blue-400 text-sm"
+          className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 font-bold shadow-lg border-2 border-blue-400 text-sm"
           style={{
             textShadow: '-1px 1px 0 #000000'
           }}
@@ -349,14 +304,14 @@ const EventsPage = () => {
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={createEvent}
-                  disabled={!newEvent.name || !newEvent.description || !newEvent.activeUntil || !newEvent.walletAddress || loading}
+                  disabled={!newEvent.name || !newEvent.description || !newEvent.walletAddress || loading}
                   className={`flex-1 px-4 py-3 text-white rounded-lg transition-all transform hover:scale-105 font-bold shadow-lg ${
-                    newEvent.name && newEvent.description && newEvent.activeUntil && newEvent.walletAddress && !loading
+                    newEvent.name && newEvent.description && newEvent.walletAddress && !loading
                       ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800'
                       : 'bg-gray-400 cursor-not-allowed'
                   }`}
                   style={{
-                    textShadow: newEvent.name && newEvent.description && newEvent.activeUntil && newEvent.walletAddress && !loading ? '-1px 1px 0 #000000' : 'none'
+                    textShadow: newEvent.name && newEvent.description && newEvent.walletAddress && !loading ? '-1px 1px 0 #000000' : 'none'
                   }}
                 >
                   {loading ? 'CREATING...' : 'CREATE EVENT'}
