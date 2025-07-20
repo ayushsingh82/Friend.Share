@@ -49,6 +49,12 @@ Friend.Share is a revolutionary dApp that combines blockchain technology, artifi
 - **UI Components**: Modern, responsive design with Noun branding
 - **Real-time Updates**: Live data synchronization with blockchain
 
+### Testnet Explorer Link
+
+- https://testnet.bscscan.com/address/0x5CB5cF00d90c1894E10921845a2A8C07E7d6FF97
+
+- https://testnet.bscscan.com/address/0xbC0B8C43E3F1a425D8916f3F86b7d108BC954dcd
+
 ## 🚀 Getting Started
 
 ### Prerequisites
