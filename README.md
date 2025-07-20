@@ -1,50 +1,53 @@
 # Friend.Share 🤝💰
 
-**Smart group payments & savings with DeFi simplicity, AI-driven automation, and social coordination**
+**Smart group payments & events with DeFi simplicity, AI-driven automation, and social coordination**
 
-Friend.Share is a revolutionary platform that combines blockchain technology, artificial intelligence, and social features to make group payments, savings, and fundraising seamless and enjoyable.
+Friend.Share is a revolutionary dApp that combines blockchain technology, artificial intelligence, and social features to make group payments and event management seamless and enjoyable.
 
 ## 🌟 Features
 
-### 💰 Shared Savings Goals
-- **Set Deadlines**: Create time-bound savings goals with clear end dates
-- **Contribution Tracking**: Monitor individual contributions and group progress
-- **Milestone Unlocks**: Celebrate achievements with milestone-based reward systems
-- **Smart Notifications**: AI-powered reminders to keep everyone on track
+### 💰 Smart Group Payments
+- **Group Creation**: Create payment groups with multiple recipients
+- **Recipient Management**: Add and manage wallet addresses for group members
+- **Total Amount Tracking**: Set and track total amounts for group payments
+- **Owner Identification**: Clear display of group creators and owners
+- **Real-time Updates**: Instant updates when groups are created or modified
 
-### ⚡ Split Bills Instantly
-- **Real-time Splitting**: Divide expenses instantly among group members
-- **Multiple Payment Methods**: Support for crypto and traditional payment options
-- **Automated Settlements**: Smart contracts handle payment distribution
-- **Expense Categories**: Organize expenses by type (rent, utilities, events, etc.)
+### 🎉 Event Management
+- **Event Creation**: Create events with name, description, and owner wallet
+- **Event Details**: View comprehensive event information
+- **Owner Tracking**: Identify who created each event
+- **Event Discovery**: Browse and discover all created events
+- **Smart Contract Integration**: All events stored on-chain for transparency
 
-### 🤖 AI-Driven Automation
-- **Smart Reminders**: Intelligent notification system based on payment patterns
-- **Predictive Analytics**: Forecast payment needs and suggest optimal contribution schedules
-- **Automated Payments**: Set up recurring contributions with smart contract execution
-- **Behavioral Insights**: Learn from group patterns to improve coordination
+### 🤖 AI-Powered Reminders
+- **Smart Notifications**: AI-driven reminder system for groups and events
+- **Payment Reminders**: Intelligent alerts for pending payments and contributions
+- **Event Reminders**: Automated notifications for upcoming events
+- **Group Coordination**: AI-assisted coordination for group activities
+- **Personalized Insights**: Smart suggestions based on user behavior patterns
 
-### 🌍 Public Good Friendly
-- **Transparent Tracking**: All transactions visible on the blockchain
-- **Cause Funding**: Dedicated features for charitable giving and community projects
-- **Impact Metrics**: Track the real-world impact of your collective contributions
-- **DAO Integration**: Community governance for fund allocation decisions
+### 🔗 Blockchain Integration
+- **Smart Contracts**: DeFi protocols for group and event management
+- **Wallet Integration**: Seamless connection with Web3 wallets via RainbowKit
+- **Transparent Transactions**: All activities visible on the blockchain
+- **Secure Payments**: Trustless payment processing through smart contracts
 
 ## 🏗️ Architecture
 
 ### Tech Stack
 - **Frontend**: Next.js 15 with React 19
 - **Styling**: Tailwind CSS 4
-- **Blockchain**: Ethereum with Viem and Wagmi
+- **Blockchain**: BSC Testnet with Viem and Wagmi
 - **Wallet Integration**: RainbowKit
 - **State Management**: TanStack Query
 - **Language**: TypeScript
 
 ### Key Components
-- **Smart Contracts**: DeFi protocols for group fund management
-- **AI Engine**: Machine learning models for automation and insights
-- **Social Layer**: Built-in communication and coordination tools
-- **Analytics Dashboard**: Real-time tracking and reporting
+- **Smart Contracts**: Group and Event management contracts
+- **AI Reminder System**: Intelligent notification and coordination
+- **UI Components**: Modern, responsive design with Noun branding
+- **Real-time Updates**: Live data synchronization with blockchain
 
 ## 🚀 Getting Started
 
@@ -90,32 +93,46 @@ npm start
 ## 📱 Usage
 
 ### Creating a Group
-1. Connect your wallet
-2. Click "Create Group"
-3. Set group name and description
-4. Invite members via wallet addresses or ENS names
-5. Choose group type (savings, bill splitting, or fundraising)
+1. Connect your Web3 wallet (MetaMask, etc.)
+2. Navigate to the "Group" page
+3. Click "+ CREATE GROUP" button
+4. Fill in group details:
+   - Group name
+   - Group description
+   - Total amount (in BNB)
+   - Add recipient wallet addresses
+5. Click "CREATE GROUP" to deploy on-chain
 
-### Setting Up Savings Goals
-1. Select "Savings Goal" mode
-2. Set target amount and deadline
-3. Configure contribution amounts per member
-4. Set milestone rewards (optional)
-5. Launch the goal
+### Managing Groups
+1. View all created groups on the main page
+2. Click "VIEW DETAILS" to see:
+   - Group owner/creator
+   - Total amount
+   - List of all recipients
+3. Groups are automatically updated from the blockchain
 
-### Splitting Bills
-1. Choose "Bill Split" mode
-2. Add expense details and amount
-3. Select members to split with
-4. Set contribution percentages
-5. Execute the split
+### Creating Events
+1. Navigate to the "Events" page
+2. Click "+ CREATE EVENT" button
+3. Fill in event details:
+   - Event name
+   - Event description
+   - Wallet address for event owner
+4. Click "CREATE EVENT" to deploy on-chain
 
-### Funding Causes
-1. Select "Fund Cause" mode
-2. Describe the cause and funding goal
-3. Set transparency requirements
-4. Launch fundraising campaign
-5. Track progress and impact
+### AI-Powered Reminders
+1. Visit the "Reminder" page
+2. View AI-generated reminders for:
+   - Group payment deadlines
+   - Event notifications
+   - Coordination suggestions
+3. Get personalized insights and recommendations
+
+### Wallet Connection
+1. Click "Connect Wallet" in the top-right corner
+2. Choose your preferred wallet
+3. Approve the connection
+4. View your address and balance in the navbar
 
 ## 🔧 Development
 
@@ -123,12 +140,16 @@ npm start
 ```
 src/
 ├── app/                 # Next.js app directory
-│   ├── components/      # Reusable UI components
-│   ├── register/        # User registration
-│   ├── explore/         # Group discovery
-│   ├── leaderboard/     # Community rankings
-│   └── buy/            # Payment processing
-├── contracts/          # Smart contract definitions
+│   ├── components/      # Reusable UI components (Navbar, Footer)
+│   ├── group/          # Group management page
+│   ├── events/         # Event management page
+│   ├── reminder/       # AI-powered reminders page
+│   ├── address.ts      # Contract addresses
+│   ├── config.ts       # Blockchain configuration
+│   ├── groupabi.json   # Group contract ABI
+│   └── eventabi.json   # Event contract ABI
+├── contract/           # Smart contract source code
+│   └── contracts/      # Solidity contracts
 ├── hooks/              # Custom React hooks
 ├── utils/              # Utility functions
 └── types/              # TypeScript type definitions
@@ -163,31 +184,39 @@ src/
 
 ## 🌐 Network Support
 
-### Mainnet
-- Ethereum Mainnet
-- Polygon
-- Arbitrum
-- Optimism
+### Current Network
+- **BSC Testnet**: Primary network for development and testing
 
-### Testnets
-- Sepolia
-- Mumbai
-- Arbitrum Sepolia
-- Optimism Sepolia
+### Smart Contracts
+- **Group Contract**: Manages group creation and recipient management
+- **Event Contract**: Handles event creation and management
+- **Contract Addresses**: Stored in `src/app/address.ts` and `src/app/eventAddress.ts`
 
-## 📊 Analytics & Insights
+## 📊 Key Features
 
-### Group Analytics
-- Contribution patterns and trends
-- Goal completion rates
-- Member engagement metrics
-- Financial health indicators
+### Group Management
+- Create groups with multiple recipients
+- Set total amounts for group payments
+- View group owners and creators
+- Real-time blockchain updates
 
-### Platform Metrics
-- Total value locked (TVL)
-- Active groups and users
-- Transaction volume
-- Community growth
+### Event Management
+- Create events with descriptions
+- Track event owners and details
+- Browse all created events
+- On-chain event storage
+
+### AI Reminders
+- Smart notification system
+- Payment deadline reminders
+- Event coordination alerts
+- Personalized insights
+
+### Wallet Integration
+- RainbowKit wallet connection
+- Real-time balance display
+- Address and transaction tracking
+- Secure Web3 authentication
 
 ## 🤝 Community
 
