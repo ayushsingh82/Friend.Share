@@ -176,13 +176,19 @@ const GroupPage = () => {
       console.log('Raw total amount:', groupDetails[2]);
       console.log('Converted total amount:', Number(groupDetails[2]) / 1e18);
       
+      // Ensure totalAmount is properly converted from wei to BNB
+      const totalAmountInBNB = Number(groupDetails[2]) / 1e18;
+      console.log('Final total amount in BNB:', totalAmountInBNB);
+      
       const detailedGroup = {
         ...group,
         name: groupDetails[0],
         description: groupDetails[1],
-        totalAmount: Number(groupDetails[2]) / 1e18, // Convert to BNB
+        totalAmount: totalAmountInBNB, // Convert to BNB
         recipients: groupDetails[3] || []
       };
+      
+      console.log('Final detailed group:', detailedGroup);
       
       setSelectedGroup(detailedGroup);
       setShowGroupDetails(true);
@@ -195,7 +201,22 @@ const GroupPage = () => {
   };
 
   const createGroup = async () => {
+    console.log('Create group called with:', {
+      groupName,
+      sharedDescription,
+      sharedAmount,
+      recipientsCount: recipients.length,
+      recipients: recipients,
+      walletAddress: address
+    });
+    
+    if (!address) {
+      setError('Please connect your wallet first');
+      return;
+    }
+    
     if (groupName && sharedDescription && sharedAmount && recipients.length > 0) {
+      console.log('All conditions met, proceeding with group creation');
       setLoading(true);
       setError('');
       setSuccess('');
@@ -243,6 +264,8 @@ const GroupPage = () => {
 
   const addFormRecipient = (inputId: number) => {
     const input = formRecipientInputs.find(inp => inp.id === inputId);
+    console.log('Adding recipient:', { input, sharedAmount, sharedDescription });
+    
     if (input && input.address && sharedAmount) {
       const newRecipient: Recipient = {
         id: Date.now().toString(),
@@ -251,7 +274,11 @@ const GroupPage = () => {
         description: sharedDescription || 'Payment'
       };
       
-      setRecipients([...recipients, newRecipient]);
+      setRecipients(prev => {
+        const newRecipients = [...prev, newRecipient];
+        console.log('Updated recipients:', newRecipients);
+        return newRecipients;
+      });
       
       // Clear this input
       setFormRecipientInputs(prev => prev.map(inp => 
@@ -261,6 +288,14 @@ const GroupPage = () => {
       ));
       
       console.log('Recipient added successfully');
+    } else {
+      console.log('Cannot add recipient:', { 
+        hasInput: !!input, 
+        hasAddress: input?.address, 
+        hasAmount: !!sharedAmount,
+        inputAddress: input?.address,
+        sharedAmount: sharedAmount
+      });
     }
   };
 
@@ -280,6 +315,8 @@ const GroupPage = () => {
       inp.id === inputId ? { ...inp, address: value } : inp
     ));
   };
+
+
 
   // Sample group data
   const sampleGroup = {
@@ -497,6 +534,51 @@ const GroupPage = () => {
                 >
                   + ADD ANOTHER RECIPIENT
                 </button>
+
+                {/* Display Added Recipients */}
+                <div className="mt-4 p-3 bg-green-50 border-2 border-green-200 rounded-lg">
+                  <h4 className="text-sm font-bold text-green-800 mb-2">
+                    Added Recipients ({recipients.length})
+                    {recipients.length === 0 && <span className="text-gray-500 ml-2">(No recipients added yet)</span>}
+                  </h4>
+                  {recipients.length > 0 ? (
+                    <div className="space-y-2">
+                      {recipients.map((recipient, index) => (
+                        <div key={recipient.id} className="flex justify-between items-center p-2 bg-white border border-green-200 rounded">
+                          <span className="text-sm font-mono text-green-700">{recipient.address}</span>
+                          <button
+                            onClick={() => removeRecipient(recipient.id)}
+                            className="px-2 py-1 text-red-600 hover:bg-red-100 rounded text-sm font-bold"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-gray-500 text-sm italic">
+                      Add recipients using the form above
+                      <br />
+                      <button
+                        onClick={() => {
+                          const testRecipient = {
+                            id: Date.now().toString(),
+                            address: '0x1234567890123456789012345678901234567890',
+                            amount: parseFloat(sharedAmount) || 0.1,
+                            description: 'Test recipient'
+                          };
+                          setRecipients(prev => [...prev, testRecipient]);
+                          console.log('Test recipient added manually');
+                        }}
+                        className="mt-2 px-3 py-1 bg-blue-500 text-white rounded text-xs font-bold"
+                      >
+                        Add Test Recipient (Debug)
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+
               </div>
 
               {/* Error and Success Messages */}
@@ -506,7 +588,17 @@ const GroupPage = () => {
               {/* Action Buttons */}
               <div className="flex gap-3 pt-4">
                 <button
-                  onClick={createGroup}
+                  onClick={() => {
+                    console.log('CREATE GROUP button clicked!');
+                    console.log('Button state:', {
+                      groupName: !!groupName,
+                      sharedDescription: !!sharedDescription,
+                      sharedAmount: !!sharedAmount,
+                      recipientsLength: recipients.length,
+                      loading: loading
+                    });
+                    createGroup();
+                  }}
                   disabled={!groupName || !sharedDescription || !sharedAmount || recipients.length === 0 || loading}
                   className={`flex-1 px-4 py-3 text-white rounded-lg transition-all transform hover:scale-105 font-bold shadow-lg ${
                     groupName && sharedDescription && sharedAmount && recipients.length > 0 && !loading
@@ -520,7 +612,15 @@ const GroupPage = () => {
                   {loading ? 'CREATING...' : 'CREATE GROUP'}
                 </button>
                 <button
-                  onClick={() => setShowCreateForm(false)}
+                  onClick={() => {
+                    setShowCreateForm(false);
+                    // Reset form when closing
+                    setGroupName('');
+                    setSharedDescription('');
+                    setSharedAmount('');
+                    setRecipients([]);
+                    setFormRecipientInputs([{ id: 1, address: '' }]);
+                  }}
                   className="flex-1 px-4 py-3 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700 rounded-lg hover:from-gray-300 hover:to-gray-400 transition-all transform hover:scale-105 font-bold shadow-lg"
                 >
                   CANCEL
@@ -589,7 +689,7 @@ const GroupPage = () => {
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-bold text-green-700 uppercase tracking-wide">Total Amount:</span>
                   <span className="text-lg font-bold text-green-900">
-                    {selectedGroup.totalAmount && selectedGroup.totalAmount > 0
+                    {selectedGroup.totalAmount !== undefined && selectedGroup.totalAmount !== null
                       ? (typeof selectedGroup.totalAmount === 'number' 
                           ? selectedGroup.totalAmount.toFixed(2) 
                           : Number(selectedGroup.totalAmount).toFixed(2)
